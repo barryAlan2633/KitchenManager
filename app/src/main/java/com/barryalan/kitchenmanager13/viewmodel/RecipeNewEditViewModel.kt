@@ -12,6 +12,7 @@ class RecipeNewEditViewModel(application: Application) : BaseViewModel(applicati
 
     val recipeToUpdateLiveData = MutableLiveData<RecipeWithIngredients>()
 
+    @ExperimentalStdlibApi
     fun saveRecipeWithIngredients(newRecipeWithIngredients: RecipeWithIngredients):Job {
         return viewModelScope.launch {
             AppDatabase(getApplication()).recipeIngredientsRefDao().insertRecipeWithIngredients(newRecipeWithIngredients)
@@ -32,6 +33,7 @@ class RecipeNewEditViewModel(application: Application) : BaseViewModel(applicati
         }
     }
 
+    @ExperimentalStdlibApi
     fun updateRecipeWithIngredients(updatedRecipeWithIngredients: RecipeWithIngredients): Job {
         return viewModelScope.launch(Dispatchers.IO) {
 

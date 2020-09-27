@@ -12,6 +12,8 @@ import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadImage
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.item_ingredient.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
     RecyclerView.Adapter<IngredientListAdapter.IngredientViewHolder>() {
@@ -46,8 +48,9 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
     override fun getItemCount() = ingredientList.size
 
+    @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
-        holder.view.et_ingredientName.text = ingredientList[position].name
+        holder.view.et_ingredientName.text = ingredientList[position].name.capitalize(Locale.ROOT)
 
         ingredientList[position].image?.let {
             holder.view.img_ingredient.loadImage(

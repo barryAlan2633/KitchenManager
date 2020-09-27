@@ -4,7 +4,7 @@ import androidx.room.*
 
 @Entity(indices = [Index(value = ["name"],unique = true)])
 data class Recipe(
-    val name: String,
+    var name: String,
     val image: String?
 ) {
     @PrimaryKey(autoGenerate = true)

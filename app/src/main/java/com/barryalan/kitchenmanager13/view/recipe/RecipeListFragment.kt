@@ -1,24 +1,26 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
+import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
+import com.barryalan.kitchenmanager13.util.communication.UIMessage
+import com.barryalan.kitchenmanager13.util.communication.UIMessageType
+import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.viewmodel.RecipeListViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_list.*
 
 
-class RecipeListFragment : Fragment() {
+class RecipeListFragment : BaseFragment() {
 
     private val recipeListAdapter = RecipeListAdapter(arrayListOf())
     private lateinit var viewModel: RecipeListViewModel
@@ -28,6 +30,15 @@ class RecipeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_recipe_list, container, false)
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This callback will only be called when MyFragment is at least Started.
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            // Handle the back button event
+            Navigation.findNavController(requireView()).navigate(RecipeListFragmentDirections.actionRecipeListFragmentToHomeScreenFragment())
+        }
     }
 
 
@@ -43,6 +54,31 @@ class RecipeListFragment : Fragment() {
             Navigation.findNavController(view)
                 .navigate(RecipeListFragmentDirections.actionRecipeListFragmentToNewEditFragment())
         }
+    }
+
+    private fun confirmDeleteRequest(viewHolder: RecyclerView.ViewHolder){
+        val callback: AreYouSureCallBack = object:
+            AreYouSureCallBack {
+            override fun proceed() {
+                recipeListAdapter.removeItem(viewHolder)
+                //TODO CALL DELETE FROM DB
+            }
+
+            override fun cancel() {
+                recipeListAdapter.undoRemoveItem()
+                //Do nothing
+            }
+        }
+
+        uiCommunicationListener.onUIMessageReceived(
+            UIMessage(
+                getString(R.string.dialog_title_are_you_sure_delete),
+                UIMessageType.AreYouSureDialog(
+                    callback
+                )
+
+            )
+        )
     }
 
     private fun initRecyclerView() {
@@ -63,7 +99,7 @@ class RecipeListFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                recipeListAdapter.removeItem(viewHolder)
+                confirmDeleteRequest(viewHolder)
             }
         }
 

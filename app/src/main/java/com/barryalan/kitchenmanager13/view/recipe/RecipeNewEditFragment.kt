@@ -1,6 +1,7 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,16 +22,21 @@ import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.Ingredient
 import com.barryalan.kitchenmanager13.model.Recipe
 import com.barryalan.kitchenmanager13.model.RecipeWithIngredients
+import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
+import com.barryalan.kitchenmanager13.util.communication.UIMessage
+import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
+import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
 import com.barryalan.kitchenmanager13.viewmodel.RecipeNewEditViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_new_edit.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
-open class RecipeNewEditFragment : Fragment() {
+open class RecipeNewEditFragment : BaseFragment() {
 
     private val ingredientListAdapter = IngredientListAdapter(arrayListOf())
     private lateinit var viewModel: RecipeNewEditViewModel
@@ -38,6 +45,18 @@ open class RecipeNewEditFragment : Fragment() {
     private var mRecipeImageURIString: String? = null
     private var mIngredientImageURIString: String? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This callback will only be called when MyFragment is at least Started.
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            // Handle the back button event
+            confirmBackNavigation(requireView())
+        }
+
+        // The callback can be enabled or disabled here or in the lambda
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +65,7 @@ open class RecipeNewEditFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_recipe_new_edit, container, false)
     }
 
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,11 +77,11 @@ open class RecipeNewEditFragment : Fragment() {
         initRecyclerView()
         subscribeObservers()
 
-
         btn_addIngredient.setOnClickListener {
 
             //create new object with the input fields
-            val newIngredient = Ingredient(et_newIngredientName.text.toString(), mIngredientImageURIString)
+            val newIngredient =
+                Ingredient(et_newIngredientName.text.toString().trim(), mIngredientImageURIString)
 
             //add to recyclerview
             ingredientListAdapter.addIngredientItem(newIngredient)
@@ -83,59 +103,31 @@ open class RecipeNewEditFragment : Fragment() {
 
         btn_updateSaveRecipe.setOnClickListener {
 
-            if (mRecipeToEditUID == -1L) { //User is in this fragment to make a new recipe
-                Toast.makeText(context,"saved",Toast.LENGTH_SHORT).show()
-
-                //create new recipeWithIngredients item
-                val newRecipeWithIngredients = RecipeWithIngredients(
-                    Recipe(tv_recipeName.text.toString(), mRecipeImageURIString),
-                    ingredientListAdapter.getIngredientList()
+            //Check to make sure there is a name on the recipe
+            if(tv_recipeName.text.isEmpty()){
+                uiCommunicationListener.onUIMessageReceived(
+                    UIMessage(
+                        "Recipe must have a name",
+                        UIMessageType.ErrorDialog()
+                    )
                 )
-
-                lifecycleScope.launch(Dispatchers.Main) {
-                    //save item to database
-                    val savingJob = viewModel.saveRecipeWithIngredients(newRecipeWithIngredients)
-
-                    //block the current co-routine until the job is completed
-                    savingJob.join()
-
-                    //navigate to back to recipe list
-                    Navigation.findNavController(it)
-                        .navigate(RecipeNewEditFragmentDirections.actionRecipeNewEditFragmentToRecipeListFragment())
-                }
-            } else {//User is in this fragment to edit an existing recipe
-                Toast.makeText(context,"updated",Toast.LENGTH_SHORT).show()
-
-                //TODO probably can refactor this out of the if statement and only write it once, rename it
-                //create new recipeWithIngredients item with data from screen
-                val updatedRecipeWithIngredients = RecipeWithIngredients(
-                    Recipe(tv_recipeName.text.toString(), mRecipeImageURIString),
-                    ingredientListAdapter.getIngredientList()
-                )
-
-                lifecycleScope.launch(Dispatchers.Main) {
-                    //update item in database
-                    val updatingJob = viewModel.updateRecipeWithIngredients(updatedRecipeWithIngredients)
-
-                    //block the current co-routine until the job is completed
-                    updatingJob.join()
-
-                    //navigate to back to recipe list
-                    val action = RecipeNewEditFragmentDirections.actionNewEditFragmentToRecipeDetailFragment()
-                    action.recipeUID = mRecipeToEditUID
-                    Navigation.findNavController(it)
-                        .navigate(action)
+            }else{
+                if (mRecipeToEditUID == -1L) { //User is in this fragment to make a new recipe
+                    saveNewRecipe(it)
+                } else {//User is in this fragment to edit an existing recipe
+                    updateRecipe(it)
                 }
             }
+
         }
 
-        img_recipe.setOnClickListener{
+        img_recipe.setOnClickListener {
             val intent = Intent(activity, CameraActivity::class.java)
 
             startActivityForResult(intent, 1)
         }
 
-        img_newIngredient.setOnClickListener{
+        img_newIngredient.setOnClickListener {
             val intent = Intent(activity, CameraActivity::class.java)
 
             startActivityForResult(intent, 2)
@@ -167,27 +159,63 @@ open class RecipeNewEditFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(rv_ingredientList)
     }
 
-    private fun subscribeObservers() {
-        viewModel.recipeToUpdateLiveData.observe(viewLifecycleOwner, Observer { recipeWithIngredients ->
-                recipeWithIngredients?.let {
-                    tv_recipeName.setText(recipeWithIngredients.recipe.name)
+    @ExperimentalStdlibApi
+    private fun saveNewRecipe(view: View){
+        Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
 
-                recipeWithIngredients.recipe.image?.let {
-                    img_recipe.loadImage(Uri.parse(it), getProgressDrawable(requireContext()))
-                    mRecipeImageURIString = it
-                }
+        //create new recipeWithIngredients item
+        val newRecipeWithIngredients = RecipeWithIngredients(
+            Recipe(tv_recipeName.text.toString().trim(), mRecipeImageURIString),
+            ingredientListAdapter.getIngredientList()
+        )
 
-                    ingredientListAdapter.updateIngredientList(recipeWithIngredients.ingredients)
-                }
-            })
+        lifecycleScope.launch(Dispatchers.Main) {
+            //save item to database
+            val savingJob = viewModel.saveRecipeWithIngredients(newRecipeWithIngredients)
+
+            //block the current co-routine until the job is completed
+            savingJob.join()
+
+            //navigate to back to recipe list
+            Navigation.findNavController(view)
+                .navigate(RecipeNewEditFragmentDirections.actionRecipeNewEditFragmentToRecipeListFragment())
+        }
     }
 
-    //handle result of picked image
+    @ExperimentalStdlibApi
+    private fun updateRecipe(view:View){
+        Toast.makeText(context, "updated", Toast.LENGTH_SHORT).show()
+
+        //TODO probably can refactor this out of the if statement and only write it once, rename it
+        //create new recipeWithIngredients item with data from screen
+        val updatedRecipeWithIngredients = RecipeWithIngredients(
+            Recipe(tv_recipeName.text.toString().trim(), mRecipeImageURIString),
+            ingredientListAdapter.getIngredientList()
+        )
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            //update item in database
+            val updatingJob =
+                viewModel.updateRecipeWithIngredients(updatedRecipeWithIngredients)
+
+            //block the current co-routine until the job is completed
+            updatingJob.join()
+
+            //navigate to back to recipe list
+            val action =
+                RecipeNewEditFragmentDirections.actionNewEditFragmentToRecipeDetailFragment()
+            action.recipeUID = mRecipeToEditUID
+            Navigation.findNavController(view)
+                .navigate(action)
+        }
+    }
+
+    //handle result of image taken
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 1 -> {
-                    data?.let {intent->
+                    data?.let { intent ->
                         mRecipeImageURIString = intent.extras?.get("photoURI").toString()
 
                         img_recipe.loadImage(
@@ -198,7 +226,7 @@ open class RecipeNewEditFragment : Fragment() {
                 }
 
                 2 -> {
-                    data?.let {intent->
+                    data?.let { intent ->
                         mIngredientImageURIString = intent.extras?.get("photoURI").toString()
 
                         img_newIngredient.loadImage(
@@ -210,6 +238,53 @@ open class RecipeNewEditFragment : Fragment() {
             }
         }
     }
+
+    private fun confirmBackNavigation(view: View) {
+        val callback: AreYouSureCallBack = object :
+            AreYouSureCallBack {
+            override fun proceed() {
+                if (mRecipeToEditUID == -1L) { //User is in this fragment to make a new recipe
+                    Navigation.findNavController(view)
+                        .navigate(RecipeNewEditFragmentDirections.actionRecipeNewEditFragmentToRecipeListFragment())
+                } else {//User is in this fragment to edit an existing recipe
+                    Navigation.findNavController(view)
+                        .navigate(RecipeNewEditFragmentDirections.actionNewEditFragmentToRecipeDetailFragment())
+                }
+
+                //TODO CALL DELETE FROM DB
+            }
+
+            override fun cancel() {
+                //Do nothing
+            }
+        }
+
+        uiCommunicationListener.onUIMessageReceived(
+            UIMessage(
+                "Are you sure you want to go back? Any information that was not saved on this page will be forever lost",
+                UIMessageType.AreYouSureDialog(callback)
+            )
+        )
+    }
+
+    @ExperimentalStdlibApi
+    private fun subscribeObservers() {
+        viewModel.recipeToUpdateLiveData.observe(
+            viewLifecycleOwner,
+            Observer { recipeWithIngredients ->
+                recipeWithIngredients?.let {
+                    tv_recipeName.setText(recipeWithIngredients.recipe.name.capitalize(Locale.ROOT))
+
+                    recipeWithIngredients.recipe.image?.let {
+                        img_recipe.loadImage(Uri.parse(it), getProgressDrawable(requireContext()))
+                        mRecipeImageURIString = it
+                    }
+
+                    ingredientListAdapter.updateIngredientList(recipeWithIngredients.ingredients)
+                }
+            })
+    }
+
 
 }
 

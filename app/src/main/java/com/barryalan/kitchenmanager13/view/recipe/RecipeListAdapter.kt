@@ -1,23 +1,22 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.Recipe
-import com.barryalan.kitchenmanager13.util.getProgressDrawable
-import com.barryalan.kitchenmanager13.util.loadImage
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
+import com.barryalan.kitchenmanager13.util.*
 import kotlinx.android.synthetic.main.item_recipe.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
     RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder>() {
+
+    private val TAG: String = "AppDebug"
 
     private var removedPosition: Int = 0
     private var removedRecipe: Recipe? = null
@@ -43,8 +42,9 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
 
     override fun getItemCount() = recipeList.size
 
+    @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        holder.view.tv_recipeName.text = recipeList[position].name
+        holder.view.tv_recipeName.text = recipeList[position].name.capitalize(Locale.ROOT)
 
         recipeList[position].image?.let {
             holder.view.img_recipe.loadImage(
@@ -71,20 +71,10 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
 
         recipeList.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
+    }
 
-        removedRecipe?.let { deletedRecipe ->
-            Snackbar.make(
-                viewHolder.itemView,
-                "${deletedRecipe.name} deleted.",
-                Snackbar.LENGTH_LONG
-            ).apply {
-                setAction("UNDO") {
-                    recipeList.add(removedPosition, deletedRecipe)
-                    notifyItemInserted(removedPosition)
-                    thisRecyclerView?.smoothScrollToPosition(removedPosition)
-                }
-            }.show()
-        }
+    fun undoRemoveItem() {
+        notifyDataSetChanged()
     }
 
     class RecipeViewHolder(var view: View) : RecyclerView.ViewHolder(view)

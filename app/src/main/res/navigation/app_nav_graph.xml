@@ -14,7 +14,7 @@
             app:destination="@id/recipeDetailFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
-            app:popUpTo="@id/recipeDetailFragment"
+            app:popUpTo="@id/recipeNewEditFragment"
             app:popUpToInclusive="true">
             <argument
                 android:name="recipeName"
@@ -25,8 +25,8 @@
             app:destination="@id/recipeListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
-            app:popUpTo="@layout/fragment_recipe_list"
-            app:popUpToInclusive="true"/>
+            app:popUpTo="@layout/fragment_home_screen"
+            app:popUpToInclusive="false"/>
         <argument
             android:name="recipeUID"
             app:argType="long"

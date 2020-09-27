@@ -2,6 +2,7 @@ package com.barryalan.kitchenmanager13.model
 
 import android.util.Log
 import androidx.room.*
+import java.util.*
 
 @Dao
 interface RecipeIngredientsRefDao {
@@ -76,8 +77,14 @@ interface RecipeIngredientsRefDao {
     @Query("SELECT * FROM Recipe WHERE recipeID = :ID")
     suspend fun getRecipeWithIngredients(ID: Long): RecipeWithIngredients
 
+    @ExperimentalStdlibApi
     @Transaction
     suspend fun insertRecipeWithIngredients(recipeWithIngredients: RecipeWithIngredients) {
+
+        //decapitalize recipe name to avoid duplication
+        recipeWithIngredients.recipe.name = recipeWithIngredients.recipe.name.decapitalize(Locale.ROOT)
+
+
         //insert recipe
         insertRecipe(recipeWithIngredients.recipe)
         Log.d(
@@ -108,6 +115,7 @@ interface RecipeIngredientsRefDao {
         }
     }
 
+    @ExperimentalStdlibApi
     @Transaction
     suspend fun updateRecipeWithIngredients(
         updatedRecipeWithIngredients: RecipeWithIngredients,
@@ -116,6 +124,10 @@ interface RecipeIngredientsRefDao {
 
         //give the updated recipe the ID of the old one thus allowing it to be updated
         updatedRecipeWithIngredients.recipe.ID = recipeWithIngredientsToUpdate.recipe.ID
+
+        //decapitalize recipe name to avoid duplication
+        recipeWithIngredientsToUpdate.recipe.name =
+            recipeWithIngredientsToUpdate.recipe.name.decapitalize(Locale.ROOT)
 
         //update recipe
         updateRecipe(updatedRecipeWithIngredients.recipe)
@@ -139,7 +151,7 @@ interface RecipeIngredientsRefDao {
             .filter { !updatedRecipeWithIngredients.ingredients.contains(it) }
 
         //delete the reference between this recipe and the deleted ingredients
-        for(ingredient in deletedIngredients){
+        for (ingredient in deletedIngredients) {
             deleteRecipeIngredientRef(ingredient.ID)
         }
 
