@@ -32,8 +32,11 @@ import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
 import com.barryalan.kitchenmanager13.viewmodel.RecipeNewEditViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_new_edit.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 open class RecipeNewEditFragment : BaseFragment() {
@@ -49,7 +52,7 @@ open class RecipeNewEditFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         // This callback will only be called when MyFragment is at least Started.
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle the back button event
             confirmBackNavigation(requireView())
         }
@@ -63,6 +66,8 @@ open class RecipeNewEditFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_recipe_new_edit, container, false)
+
+
     }
 
     @ExperimentalStdlibApi
@@ -181,6 +186,19 @@ open class RecipeNewEditFragment : BaseFragment() {
                 .navigate(RecipeNewEditFragmentDirections.actionRecipeNewEditFragmentToRecipeListFragment())
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @ExperimentalStdlibApi
     private fun updateRecipe(view:View){

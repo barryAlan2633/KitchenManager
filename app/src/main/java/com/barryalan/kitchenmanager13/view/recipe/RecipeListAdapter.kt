@@ -18,7 +18,7 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
 
     private val TAG: String = "AppDebug"
 
-    private var removedPosition: Int = 0
+    var removedPosition: Int = 0
     private var removedRecipe: Recipe? = null
     private var thisRecyclerView: RecyclerView? = null
 
