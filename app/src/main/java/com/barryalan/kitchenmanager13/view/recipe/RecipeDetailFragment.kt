@@ -60,7 +60,7 @@ class RecipeDetailFragment : Fragment() {
 
     private fun initRecyclerView() {
         rv_ingredientList.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = ingredientListAdapter
         }
     }
