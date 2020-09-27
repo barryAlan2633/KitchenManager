@@ -35,7 +35,7 @@ class RecipeListFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         // This callback will only be called when MyFragment is at least Started.
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle the back button event
             Navigation.findNavController(requireView()).navigate(RecipeListFragmentDirections.actionRecipeListFragmentToHomeScreenFragment())
         }
@@ -60,6 +60,10 @@ class RecipeListFragment : BaseFragment() {
         val callback: AreYouSureCallBack = object:
             AreYouSureCallBack {
             override fun proceed() {
+                //First delete recipe from database
+                viewModel.deleteRecipeAndAssociations(recipeListAdapter.getRecipeList()[viewHolder.adapterPosition].ID)
+
+                //Then delete from recycler view
                 recipeListAdapter.removeItem(viewHolder)
                 //TODO CALL DELETE FROM DB
             }

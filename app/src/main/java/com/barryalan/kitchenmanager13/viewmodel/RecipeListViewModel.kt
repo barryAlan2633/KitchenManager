@@ -44,4 +44,10 @@ class RecipeListViewModel(application: Application) : BaseViewModel(application)
         loading.value = false
     }
 
+    fun deleteRecipeAndAssociations(recipeID:Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            AppDatabase(getApplication()).recipeIngredientsRefDao().deleteRecipeAndAssociations(recipeID)
+        }
+    }
+
 }

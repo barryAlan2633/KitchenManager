@@ -25,6 +25,9 @@ interface RecipeIngredientsRefDao {
     @Delete
     suspend fun deleteRecipe(recipe: Recipe)
 
+    @Query("DELETE FROM Recipe Where recipeID = :recipeID")
+    suspend fun deleteRecipe(recipeID: Long)
+
     @Query("DELETE FROM Recipe")
     suspend fun nukeRecipeTable()
 
@@ -177,6 +180,15 @@ interface RecipeIngredientsRefDao {
             )
             Log.d("insertTransaction:", "inserted new recipeIngredientRef item")
         }
+    }
+
+    @Transaction
+    suspend fun deleteRecipeAndAssociations(recipeID: Long) {
+        //delete this recipe
+        deleteRecipe(recipeID)
+
+        //delete all recipeIngredientsRef that belong to this recipe
+        deleteAllRecipeIngredientRef(recipeID)
     }
 }
 
