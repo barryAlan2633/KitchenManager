@@ -51,6 +51,7 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
     @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
         holder.view.et_ingredientName.text = ingredientList[position].name.capitalize(Locale.ROOT)
+        holder.view.et_ingredientAmount.text = ingredientList[position].amount.toString()
 
         ingredientList[position].image?.let {
             holder.view.img_ingredient.loadImage(

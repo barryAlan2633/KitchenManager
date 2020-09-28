@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1dd08f28b8cad401393b3df6eaf4a71e",
+    "identityHash": "019c7d6e726b88a344bf520db96105a1",
     "entities": [
       {
         "tableName": "Recipe",
@@ -47,7 +47,7 @@
       },
       {
         "tableName": "Ingredient",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ingredientID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `image` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ingredientID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `image` TEXT, `amount` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "ID",
@@ -66,6 +66,12 @@
             "columnName": "image",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -88,17 +94,17 @@
       },
       {
         "tableName": "RecipeIngredientRef",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ingredientID` INTEGER NOT NULL, `recipeID` INTEGER NOT NULL, PRIMARY KEY(`recipeID`, `ingredientID`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeID` INTEGER NOT NULL, `ingredientID` INTEGER NOT NULL, PRIMARY KEY(`recipeID`, `ingredientID`))",
         "fields": [
           {
-            "fieldPath": "ingredientID",
-            "columnName": "ingredientID",
+            "fieldPath": "recipeID",
+            "columnName": "recipeID",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "recipeID",
-            "columnName": "recipeID",
+            "fieldPath": "ingredientID",
+            "columnName": "ingredientID",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -117,7 +123,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1dd08f28b8cad401393b3df6eaf4a71e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '019c7d6e726b88a344bf520db96105a1')"
     ]
   }
 }

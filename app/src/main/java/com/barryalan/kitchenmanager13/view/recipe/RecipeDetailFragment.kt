@@ -32,7 +32,7 @@ class RecipeDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // This callback will only be called when MyFragment is at least Started.
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle the back button event
             Navigation.findNavController(requireView()).navigate(RecipeDetailFragmentDirections.actionDetailFragmentToRecipeListFragment())
         }
