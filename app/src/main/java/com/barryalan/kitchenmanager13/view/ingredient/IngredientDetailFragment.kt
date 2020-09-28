@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,7 @@ import com.barryalan.kitchenmanager13.view.shared.CameraActivity
 import com.barryalan.kitchenmanager13.viewmodel.IngredientDetailViewModel
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.*
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.btn_cancel
-import kotlinx.android.synthetic.main.fragment_ingredient_detail.et_ingredientName
+import kotlinx.android.synthetic.main.fragment_ingredient_detail.et_ingredientNameDetail
 import kotlinx.android.synthetic.main.fragment_recipe_new_edit.*
 import kotlinx.android.synthetic.main.item_ingredient.*
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,7 @@ class IngredientDetailFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         // This callback will only be called when MyFragment is at least Started.
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle the back button event
             confirmBackNavigation(requireView())
         }
@@ -69,21 +70,31 @@ class IngredientDetailFragment : BaseFragment() {
         }
         subscribeObservers()
 
-        btn_cancel.setOnClickListener {
-            Navigation.findNavController(it)
-                .navigate(IngredientDetailFragmentDirections.actionIngredientDetailFragmentToIngredientListFragment())
+        btn_cancel.setOnClickListener {view->
+            confirmBackNavigation(view)
         }
 
         btn_saveIngredient.setOnClickListener {
-            if (et_ingredientName.text.isEmpty()) {
-                uiCommunicationListener.onUIMessageReceived(
-                    UIMessage(
-                        "Ingredient must have a name",
-                        UIMessageType.ErrorDialog()
+            when {
+                et_ingredientNameDetail.text.isEmpty() -> {
+                    uiCommunicationListener.onUIMessageReceived(
+                        UIMessage(
+                            "Ingredient must have a name",
+                            UIMessageType.ErrorDialog()
+                        )
                     )
-                )
-            } else {
-                saveIngredient(it)
+                }
+                et_ingredientAmountDetail.text.isEmpty() -> {
+                    uiCommunicationListener.onUIMessageReceived(
+                        UIMessage(
+                            "Ingredient must have an amount",
+                            UIMessageType.ErrorDialog()
+                        )
+                    )
+                }
+                else -> {
+                    saveIngredient(it)
+                }
             }
         }
 
@@ -121,7 +132,7 @@ class IngredientDetailFragment : BaseFragment() {
 
             //create new ingredient object from UI fields
             val updatedIngredient =
-                Ingredient(et_ingredientName.text.toString().trim(), mIngredientImageURIString)
+                Ingredient(et_ingredientNameDetail.text.toString().trim(), mIngredientImageURIString, Integer.parseInt(et_ingredientAmountDetail.text.toString()))
 
             //update ingredient in the database
             val updateJob = viewModel.updateIngredient(updatedIngredient)
@@ -159,7 +170,8 @@ class IngredientDetailFragment : BaseFragment() {
     private fun subscribeObservers() {
         viewModel.selectedIngredientLiveData.observe(viewLifecycleOwner, Observer { ingredient ->
             ingredient?.let { it ->
-                et_ingredientName.setText(ingredient.name.capitalize(Locale.ROOT))
+                et_ingredientNameDetail.setText(ingredient.name.capitalize(Locale.ROOT))
+                et_ingredientAmountDetail.setText(String.format(Locale.getDefault(), "%d", ingredient.amount))
                 it.image?.let { imageURI ->
                     mIngredientImageURIString = imageURI
                     img_ingredientDetail.loadImage(

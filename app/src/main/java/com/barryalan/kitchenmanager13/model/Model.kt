@@ -14,9 +14,9 @@ data class Recipe(
 
 @Entity(indices = [Index(value = ["name"],unique = true)])
 data class Ingredient(
-
     val name: String,
-    val image: String?
+    val image: String?,
+    val amount: Int
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ingredientID")

@@ -84,26 +84,41 @@ open class RecipeNewEditFragment : BaseFragment() {
 
         btn_addIngredient.setOnClickListener {
 
-            //create new object with the input fields
-            val newIngredient =
-                Ingredient(et_newIngredientName.text.toString().trim(), mIngredientImageURIString)
+            when {
+                et_newIngredientName.text.isEmpty() -> {
+                    uiCommunicationListener.onUIMessageReceived(
+                        UIMessage(
+                            "Ingredient must have a name",
+                            UIMessageType.ErrorDialog()
+                        )
+                    )
+                }
+                et_newIngredientAmount.text.isEmpty() -> {
+                    uiCommunicationListener.onUIMessageReceived(
+                        UIMessage(
+                            "Ingredient must have an amount",
+                            UIMessageType.ErrorDialog()
+                        )
+                    )
+                }
+                else -> {
+                    //create new object with the input fields
+                    val newIngredient =
+                        Ingredient(et_newIngredientName.text.toString().trim(), mIngredientImageURIString,Integer.parseInt(et_newIngredientAmount.text.toString()))
 
-            //add to recyclerview
-            ingredientListAdapter.addIngredientItem(newIngredient)
+                    //add to recyclerview
+                    ingredientListAdapter.addIngredientItem(newIngredient)
 
-            //clear fields
-            et_newIngredientName.text.clear()
-            img_newIngredient.setImageResource(R.drawable.ic_error_black_24dp)
+                    //clear fields
+                    et_newIngredientName.text.clear()
+                    et_newIngredientAmount.text.clear()
+                    img_newIngredient.setImageResource(R.drawable.ic_error_black_24dp)
+                }
+            }
         }
 
-        btn_cancel.setOnClickListener {
-            if (mRecipeToEditUID == -1L) { //User is in this fragment to make a new recipe
-                Navigation.findNavController(it)
-                    .navigate(RecipeNewEditFragmentDirections.actionRecipeNewEditFragmentToRecipeListFragment())
-            } else {//User is in this fragment to edit an existing recipe
-                Navigation.findNavController(it)
-                    .navigate(RecipeNewEditFragmentDirections.actionNewEditFragmentToRecipeDetailFragment())
-            }
+        btn_cancel.setOnClickListener {view->
+            confirmBackNavigation(view)
         }
 
         btn_updateSaveRecipe.setOnClickListener {
@@ -186,19 +201,6 @@ open class RecipeNewEditFragment : BaseFragment() {
                 .navigate(RecipeNewEditFragmentDirections.actionRecipeNewEditFragmentToRecipeListFragment())
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @ExperimentalStdlibApi
     private fun updateRecipe(view:View){

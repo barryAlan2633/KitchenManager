@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="125dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal">
 
     <ImageView
@@ -26,7 +27,15 @@
             android:id="@+id/et_ingredientName"
             style="@style/Title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:text="Milk"/>
+
+        <TextView
+            android:id="@+id/et_ingredientAmount"
+            style="@style/Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="1"/>
 
     </LinearLayout>
 
