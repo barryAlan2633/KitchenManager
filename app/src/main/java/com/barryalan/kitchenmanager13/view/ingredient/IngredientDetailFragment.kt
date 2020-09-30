@@ -38,7 +38,6 @@ class IngredientDetailFragment : BaseFragment(){
 
     private lateinit var viewModel: IngredientDetailViewModel
     private var mIngredientImageURIString: String? = null
-    private var mIngredientSelectedUnit: String = "Unit"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
