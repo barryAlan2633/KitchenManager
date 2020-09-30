@@ -29,8 +29,8 @@ interface RecipeIngredientsRefDao {
     @Query("DELETE FROM Recipe Where recipeID = :recipeID")
     suspend fun deleteRecipe(recipeID: Long)
 
-    @Update
-    suspend fun updateRecipe(recipe: Recipe)
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun updateRecipe(recipe: Recipe):Int
 
     @Query("DELETE FROM Recipe")
     suspend fun nukeRecipeTable()
@@ -60,7 +60,6 @@ interface RecipeIngredientsRefDao {
 
     @Query("DELETE FROM Ingredient")
     suspend fun nukeIngredientTable()
-
 
 
     //AmountDao==================================================================================
@@ -112,10 +111,11 @@ interface RecipeIngredientsRefDao {
     suspend fun insertRecipeWithIngredients(recipeWithIngredients: RecipeWithIngredients) {
 //        1)Normalize names(lowercase)
 //        2)Insert recipe
-//        3)Insert ingredients
-//        4)Retrieve IDs of items that were not inserted, using name(ID = -1)
-//        5)Insert amounts
-//        6)Insert ref
+//        3)If recipe is not inserted correctly(ID=-1) re-insert by appending a 1 to it until it works
+//        4)Insert ingredients
+//        5)Retrieve IDs of items that were not inserted, using name(ID = -1)
+//        6)Insert amounts
+//        7)Insert ref
 
         //1)
         //decapitalize recipe name to avoid duplication
@@ -129,18 +129,32 @@ interface RecipeIngredientsRefDao {
 
         //2)
         // insert recipe
-        val recipeID = insertRecipe(recipeWithIngredients.recipe)
+        var recipeID = insertRecipe(recipeWithIngredients.recipe)
         Log.d(
             "insertTransaction:",
             "inserted new Recipe item: ${recipeWithIngredients.recipe.name}, ID= $recipeID"
         )
 
-        //3)
+        //3
+        //if the recipe was not inserted properly due to name conflict add a number and
+        var count = 2
+        val recipeName = recipeWithIngredients.recipe.name
+        while(recipeID == -1L){
+            count++
+            recipeWithIngredients.recipe.name = recipeName + count
+            recipeID = insertRecipe(recipeWithIngredients.recipe)
+            Log.d(
+                "insertTransaction:",
+                "inserted new Recipe item: ${recipeName}, ID= $recipeID"
+            )
+        }
+
+        //4)
         //insert all ingredients
         val retrievedIngredientsIDs = insertAllIngredients(recipeWithIngredients.ingredients)
         Log.d("insertTransaction:", "inserted new ingredient items, IDs= $retrievedIngredientsIDs")
 
-        //4)
+        //5)
         val finalIngredientsIDs: MutableList<Long> = mutableListOf()
         for (ingredientID in retrievedIngredientsIDs.withIndex()) {
             if (ingredientID.value == -1L) {
@@ -152,12 +166,12 @@ interface RecipeIngredientsRefDao {
             }
         }
 
-        //5)
+        //6)
         //insert all amounts
         val amountsIDs = insertAllAmounts(recipeWithIngredients.amounts)
         Log.d("insertTransaction:", "inserted new amount items IDs= $amountsIDs")
 
-        //6)
+        //7)
         //insert all references
         for (count in recipeWithIngredients.ingredients.indices) {
             val reference =
@@ -181,16 +195,17 @@ interface RecipeIngredientsRefDao {
         //1)Give new recipe Item the correct id
         //2)Normalize the recipe name
         //3)Update recipe item
+        //4)If recipe is not inserted correctly(ID=-1) re-insert by appending a 1 to it until it works
 
-        //4)Get lists of items to be inserted and deleted
-        //5)Normalize ingredient names
-        //6)Insert new ingredients
-        //7)Retrieve IDs of items that were not inserted properly(ID = -1), using name
-        //8)insert new amounts
-        //9)insert new references
+        //5)Get lists of items to be inserted and deleted
+        //6)Normalize ingredient names
+        //7)Insert new ingredients
+        //8)Retrieve IDs of items that were not inserted properly(ID = -1), using name
+        //9)insert new amounts
+        //10)insert new references
 
-        //10)delete unwanted amounts
-        //11)delete unwanted references
+        //11)delete unwanted amounts
+        //12)delete unwanted references
 
         //1)
         //give the updated recipe the ID of the old one thus allowing it to be updated
@@ -202,9 +217,23 @@ interface RecipeIngredientsRefDao {
 
         //3)
         // update recipe
-        updateRecipe(updated.recipe)
+        var updatedRecipeID = updateRecipe(updated.recipe)
 
-        //4)
+        //4
+        //if the recipe was not updated properly due to name conflict add a number and try again
+        var count = 2
+        val recipeName = updated.recipe.name
+        while(updatedRecipeID == 0){
+            count++
+            updated.recipe.name = recipeName + count
+            updatedRecipeID = updateRecipe(updated.recipe)
+            Log.d(
+                "insertTransaction:",
+                "inserted new Recipe item: ${recipeName}, ID= $updatedRecipeID"
+            )
+        }
+
+        //5)
         //items to be insert these don't have IDs set
         val ingredientsToInsert = updated.ingredients.filter { !toUpdate.ingredients.contains(it) }
         val amountsToInsert = updated.amounts.filter { !toUpdate.amounts.contains(it) }
@@ -213,18 +242,18 @@ interface RecipeIngredientsRefDao {
         val ingredientsToDelete = toUpdate.ingredients.filter { !updated.ingredients.contains(it) }
         val amountsToDelete = toUpdate.amounts.filter { !updated.amounts.contains(it) }
 
-        //5)
+        //6)
         //decapitalize all ingredient names to avoid duplication
         for (ingredient in ingredientsToInsert) {
             ingredient.name = ingredient.name.decapitalize(Locale.ROOT)
         }
 
-        //6)
+        //7)
         // insert all ingredients
         val retrievedIngredientsIDs = insertAllIngredients(ingredientsToInsert)
         Log.d("updateTransaction:", "inserted new ingredient items, IDs= $retrievedIngredientsIDs")
 
-        //7)
+        //8)
         //retrieve IDs of items that were not inserted properly(ID=-1)
         val finalIngredientsIDs: MutableList<Long> = mutableListOf()
         for (ingredientID in retrievedIngredientsIDs.withIndex()) {
@@ -236,12 +265,12 @@ interface RecipeIngredientsRefDao {
             }
         }
 
-        //8)
+        //9)
         //insert all new amounts
         val amountsIDs = insertAllAmounts(amountsToInsert)
         Log.d("updateTransaction:", "inserted new amount items IDs= $amountsIDs")
 
-        //9)
+        //10)
         //insert all new references
         for (count in finalIngredientsIDs.indices) {
             val reference =
@@ -258,16 +287,15 @@ interface RecipeIngredientsRefDao {
             )
         }
 
-        //10)
+        //11)
         // delete unwanted amounts
         deleteAllAmounts(amountsToDelete)
 
-        //11)
+        //12)
         // delete unwanted references
         for (amount in amountsToDelete) {
             deleteRecipeIngredientRef(amount.ID)
         }
-
 
 
 //        //TODO can probably make this perform better if I make a db request to only update the field that changed instead of the whole object
@@ -301,8 +329,5 @@ interface RecipeIngredientsRefDao {
     @Transaction
     @Query("SELECT * FROM Ingredient")
     suspend fun getAllIngredientWithRecipes(): List<IngredientWithRecipes>
-
-
-
 }
 
