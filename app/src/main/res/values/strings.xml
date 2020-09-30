@@ -9,4 +9,23 @@
     <string name="dialog_title_are_you_sure">Are you sure?</string>
     <string name="dialog_title_are_you_sure_delete">Are you sure you want to delete this? This cannot be un-done.</string>
     <string name="dialog_button_negative">Cancel</string>
+
+
+    <string-array name="units">
+        <item>Unit</item>
+        <item>Dash</item>
+        <item>Pinch</item>
+        <item>Tea Spoon</item>
+        <item>Table Spoon</item>
+        <item>Ounce</item>
+        <item>Pound</item>
+        <item>Cup</item>
+        <item>Pint</item>
+        <item>Liter</item>
+        <item>Milliliter</item>
+        <item>Quart</item>
+        <item>Gallon</item>
+    </string-array>
+
 </resources>
+<!--    enum class MeasurementType{TABLESPOON,TEASPOON,CUP,OUNCE,POUND,MILLILITER,LITER,UNIT,PINT,QUART,GALLON,DASH,PINCH}-->

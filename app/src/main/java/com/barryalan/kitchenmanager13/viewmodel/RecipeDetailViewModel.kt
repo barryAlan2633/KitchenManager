@@ -20,10 +20,11 @@ class RecipeDetailViewModel(application: Application) : BaseViewModel(applicatio
 
     private fun retrieveRecipeWithIngredientsFromDB(recipeID: Long){
         viewModelScope.launch(Dispatchers.IO) {
-            val recipePairDetails = AppDatabase(getApplication()).recipeIngredientsRefDao().getRecipeWithIngredients(recipeID)
+            val recipeWithIngredientsDetails = AppDatabase(getApplication()).recipeIngredientsRefDao().getRecipeWithIngredients(recipeID)
 
+            Log.d("debug:",recipeWithIngredientsDetails.toString())
             withContext(Dispatchers.Main){
-                recipeWithIngredientsLiveData.value = recipePairDetails
+                recipeWithIngredientsLiveData.value = recipeWithIngredientsDetails
             }
         }
     }

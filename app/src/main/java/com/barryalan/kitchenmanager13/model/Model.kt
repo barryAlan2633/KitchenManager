@@ -14,19 +14,29 @@ data class Recipe(
 
 @Entity(indices = [Index(value = ["name"],unique = true)])
 data class Ingredient(
-    val name: String,
-    val image: String?,
-    val amount: Int
+    var name: String,
+    val image: String?
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ingredientID")
     var ID: Long = 0
 }
 
-@Entity(primaryKeys = ["recipeID", "ingredientID"])
+@Entity
+data class Amount(
+    val amount: Int,
+    val unit: String
+) {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "amountID")
+    var ID: Long = 0
+}
+
+@Entity(primaryKeys = ["recipeID", "ingredientID","amountID"])
 data class RecipeIngredientRef(
     val recipeID: Long,
-    val ingredientID: Long
+    val ingredientID: Long,
+    val amountID:Long
 )
 
 data class RecipeWithIngredients(
@@ -42,5 +52,32 @@ data class RecipeWithIngredients(
             entityColumn = "ingredientID"
         )
     )
-    val ingredients: List<Ingredient>
+    val ingredients: List<Ingredient>,
+
+    @Relation(parentColumn = "recipeID",
+        entity = Amount::class,
+        entityColumn = "amountID",
+        associateBy = Junction(
+            value = RecipeIngredientRef::class,
+            parentColumn = "recipeID",
+            entityColumn = "amountID"
+        ))
+    val amounts: List<Amount>
 )
+
+data class IngredientWithRecipes(
+    @Embedded
+    val ingredient:Ingredient,
+    @Relation(
+        parentColumn = "ingredientID",
+        entity = Recipe::class,
+        entityColumn = "recipeID",
+        associateBy = Junction(
+            value = RecipeIngredientRef::class,
+            parentColumn = "ingredientID",
+            entityColumn = "recipeID"
+        )
+    )
+    val recipes: List<Recipe>
+)
+

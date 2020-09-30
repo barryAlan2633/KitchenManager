@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -33,10 +34,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class IngredientDetailFragment : BaseFragment() {
+class IngredientDetailFragment : BaseFragment(){
 
     private lateinit var viewModel: IngredientDetailViewModel
     private var mIngredientImageURIString: String? = null
+    private var mIngredientSelectedUnit: String = "Unit"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +72,8 @@ class IngredientDetailFragment : BaseFragment() {
         }
         subscribeObservers()
 
-        btn_cancel.setOnClickListener {view->
-            confirmBackNavigation(view)
+        btn_cancel.setOnClickListener { v ->
+            confirmBackNavigation(v)
         }
 
         btn_saveIngredient.setOnClickListener {
@@ -80,14 +82,6 @@ class IngredientDetailFragment : BaseFragment() {
                     uiCommunicationListener.onUIMessageReceived(
                         UIMessage(
                             "Ingredient must have a name",
-                            UIMessageType.ErrorDialog()
-                        )
-                    )
-                }
-                et_ingredientAmountDetail.text.isEmpty() -> {
-                    uiCommunicationListener.onUIMessageReceived(
-                        UIMessage(
-                            "Ingredient must have an amount",
                             UIMessageType.ErrorDialog()
                         )
                     )
@@ -132,7 +126,10 @@ class IngredientDetailFragment : BaseFragment() {
 
             //create new ingredient object from UI fields
             val updatedIngredient =
-                Ingredient(et_ingredientNameDetail.text.toString().trim(), mIngredientImageURIString, Integer.parseInt(et_ingredientAmountDetail.text.toString()))
+                Ingredient(
+                    et_ingredientNameDetail.text.toString().trim(),
+                    mIngredientImageURIString
+                )
 
             //update ingredient in the database
             val updateJob = viewModel.updateIngredient(updatedIngredient)
@@ -171,7 +168,13 @@ class IngredientDetailFragment : BaseFragment() {
         viewModel.selectedIngredientLiveData.observe(viewLifecycleOwner, Observer { ingredient ->
             ingredient?.let { it ->
                 et_ingredientNameDetail.setText(ingredient.name.capitalize(Locale.ROOT))
-                et_ingredientAmountDetail.setText(String.format(Locale.getDefault(), "%d", ingredient.amount))
+//                et_ingredientAmountDetail.setText(
+//                    String.format(
+//                        Locale.getDefault(),
+//                        "%d",
+//                        ingredient.amount
+//                    )
+//                )
                 it.image?.let { imageURI ->
                     mIngredientImageURIString = imageURI
                     img_ingredientDetail.loadImage(
@@ -182,4 +185,5 @@ class IngredientDetailFragment : BaseFragment() {
             }
         })
     }
+
 }
