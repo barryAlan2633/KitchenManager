@@ -73,7 +73,7 @@ class IngredientListFragment : Fragment() {
         viewModel.ingredientsLiveData.observe(viewLifecycleOwner, Observer { ingredients ->
             ingredients?.let {
                 rv_ingredientList.visibility = View.VISIBLE
-                ingredientListAdapter.updateIngredientList(ingredients)
+                ingredientListAdapter.updateIngredientList(ingredients, listOf())
             }
         })
         viewModel.ingredientLoadError.observe(viewLifecycleOwner, Observer { isError ->

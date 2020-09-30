@@ -30,12 +30,26 @@
             android:layout_height="wrap_content"
             tools:text="Milk"/>
 
-        <TextView
-            android:id="@+id/et_ingredientAmount"
-            style="@style/Title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="1"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_ingredientAmount"
+                style="@style/Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="1"/>
+            <TextView
+                android:id="@+id/tv_ingredientAmountUnit"
+                style="@style/Title"
+                android:layout_marginStart="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Unit"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 

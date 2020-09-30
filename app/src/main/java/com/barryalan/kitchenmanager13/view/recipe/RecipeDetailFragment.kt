@@ -19,7 +19,7 @@ import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.viewmodel.RecipeDetailViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_detail.*
 import kotlinx.android.synthetic.main.fragment_recipe_detail.ab_editRecipe
-import kotlinx.android.synthetic.main.fragment_recipe_list.*
+import kotlinx.android.synthetic.main.item_ingredient.*
 import java.util.*
 
 class RecipeDetailFragment : Fragment() {
@@ -72,7 +72,7 @@ class RecipeDetailFragment : Fragment() {
 
     private fun initRecyclerView() {
         rv_ingredientList.apply {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = GridLayoutManager(context, 2)
             adapter = ingredientListAdapter
         }
     }
@@ -82,10 +82,10 @@ class RecipeDetailFragment : Fragment() {
         viewModel.recipeWithIngredientsLiveData.observe(viewLifecycleOwner, Observer { recipeWithIngredients ->
             recipeWithIngredients?.let {
                 tv_recipeName.text = it.recipe.name.capitalize(Locale.ROOT)
-                it.recipe.image?.let {
-                    img_recipe.loadImage(Uri.parse(it), getProgressDrawable(requireContext()))
+                it.recipe.image?.let {imageURI->
+                    img_recipe.loadImage(Uri.parse(imageURI), getProgressDrawable(requireContext()))
                 }
-                ingredientListAdapter.updateIngredientList(it.ingredients)
+                ingredientListAdapter.updateIngredientList(it.ingredients,it.amounts)
             }
         })
     }

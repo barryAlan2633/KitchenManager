@@ -1,12 +1,15 @@
 package com.barryalan.kitchenmanager13.view.ingredient
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
+import com.barryalan.kitchenmanager13.model.Amount
 import com.barryalan.kitchenmanager13.model.Ingredient
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadImage
@@ -20,20 +23,28 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
     private var mRemovedPosition: Int = 0
     private var mRemovedIngredient: Ingredient? = null
+    private var mRemovedIngredientAmount: Amount? = null
     private var thisRecyclerView: RecyclerView? = null
+    private var amounts: MutableList<Amount> = mutableListOf()
 
     fun getIngredientList(): ArrayList<Ingredient> {
         return ingredientList
     }
 
-    fun updateIngredientList(newIngredientList: List<Ingredient>) {
+    fun updateIngredientList(newIngredientList: List<Ingredient>, newAmounts: List<Amount>) {
         ingredientList.clear()
         ingredientList.addAll(newIngredientList)
+
+        amounts.clear()
+        amounts.addAll(newAmounts)
+        Log.d("debug",amounts.toString())
+
         notifyDataSetChanged()
     }
 
-    fun addIngredientItem(newIngredient: Ingredient) {
+    fun addIngredientItem(newIngredient: Ingredient, newAmount: Amount) {
         ingredientList.add(newIngredient)
+        amounts.add(newAmount)
         notifyItemInserted(itemCount)
     }
 
@@ -51,7 +62,13 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
     @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
         holder.view.et_ingredientName.text = ingredientList[position].name.capitalize(Locale.ROOT)
-        holder.view.et_ingredientAmount.text = ingredientList[position].amount.toString()
+
+        if(amounts.isNotEmpty()){
+            holder.view.tv_ingredientAmount.text = amounts[position].amount.toString()
+            holder.view.tv_ingredientAmountUnit.text = amounts[position].unit
+
+        }
+
 
         ingredientList[position].image?.let {
             holder.view.img_ingredient.loadImage(
@@ -85,8 +102,10 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
     fun removeItem(viewHolder: RecyclerView.ViewHolder) {
         mRemovedPosition = viewHolder.adapterPosition
         mRemovedIngredient = ingredientList[viewHolder.adapterPosition]
-
+        mRemovedIngredientAmount = amounts[viewHolder.adapterPosition]
         ingredientList.removeAt(viewHolder.adapterPosition)
+        amounts.removeAt(viewHolder.adapterPosition)
+
         notifyItemRemoved(viewHolder.adapterPosition)
 
         mRemovedIngredient?.let { deletedIngredient ->
@@ -98,6 +117,7 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
                 setAction("UNDO") {
                     ingredientList.add(mRemovedPosition, deletedIngredient)
+                    amounts.add(mRemovedPosition, mRemovedIngredientAmount!!)
                     notifyItemInserted(mRemovedPosition)
                     thisRecyclerView?.smoothScrollToPosition(mRemovedPosition)
                 }.show()
@@ -106,6 +126,11 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
 
     }
+
+    fun getAmountsList(): List<Amount> {
+        return amounts
+    }
+
 
     class IngredientViewHolder(var view: View) : RecyclerView.ViewHolder(view)
 }
