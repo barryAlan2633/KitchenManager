@@ -299,8 +299,9 @@ interface RecipeIngredientsRefDao {
 
     //IngredientWithRecipes CRUD====================================================================
     @Transaction
-    @Query("SELECT * FROM Recipe")
-    suspend fun getAllIngredientWithRecipes(): IngredientWithRecipes
+    @Query("SELECT * FROM Ingredient")
+    suspend fun getAllIngredientWithRecipes(): List<IngredientWithRecipes>
+
 
 
 }

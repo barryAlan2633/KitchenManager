@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1dd08f28b8cad401393b3df6eaf4a71e",
+    "identityHash": "8184ba939d115822a7313ecea2d49e7e",
     "entities": [
       {
         "tableName": "Recipe",
@@ -87,8 +87,40 @@
         "foreignKeys": []
       },
       {
+        "tableName": "Amount",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`amountID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` INTEGER NOT NULL, `unit` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "ID",
+            "columnName": "amountID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unit",
+            "columnName": "unit",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "amountID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "RecipeIngredientRef",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeID` INTEGER NOT NULL, `ingredientID` INTEGER NOT NULL, PRIMARY KEY(`recipeID`, `ingredientID`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeID` INTEGER NOT NULL, `ingredientID` INTEGER NOT NULL, `amountID` INTEGER NOT NULL, PRIMARY KEY(`recipeID`, `ingredientID`, `amountID`))",
         "fields": [
           {
             "fieldPath": "recipeID",
@@ -101,12 +133,19 @@
             "columnName": "ingredientID",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "amountID",
+            "columnName": "amountID",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
             "recipeID",
-            "ingredientID"
+            "ingredientID",
+            "amountID"
           ],
           "autoGenerate": false
         },
@@ -117,7 +156,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1dd08f28b8cad401393b3df6eaf4a71e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8184ba939d115822a7313ecea2d49e7e')"
     ]
   }
 }

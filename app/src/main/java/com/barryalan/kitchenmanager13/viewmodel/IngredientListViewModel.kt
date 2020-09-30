@@ -4,15 +4,14 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.barryalan.kitchenmanager13.model.AppDatabase
-import com.barryalan.kitchenmanager13.model.Ingredient
-import com.barryalan.kitchenmanager13.model.Recipe
+import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class IngredientListViewModel(application: Application) : BaseViewModel(application) {
 
-    val ingredientsLiveData = MutableLiveData<List<Ingredient>>()
+    val ingredientWithRecipesListLiveData = MutableLiveData<List<IngredientWithRecipes>>()
     val ingredientLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
 
@@ -23,7 +22,7 @@ class IngredientListViewModel(application: Application) : BaseViewModel(applicat
     private fun retrieveIngredientsFromDB() {
         loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            val ingredients = AppDatabase(getApplication()).recipeIngredientsRefDao().getAllIngredients()
+            val ingredients = AppDatabase(getApplication()).recipeIngredientsRefDao().getAllIngredientWithRecipes()
 
             withContext(Dispatchers.Main) {
                 ingredientsRetrieved(ingredients)
@@ -31,8 +30,8 @@ class IngredientListViewModel(application: Application) : BaseViewModel(applicat
         }
     }
 
-    private fun ingredientsRetrieved(ingredientList: List<Ingredient>) {
-        ingredientsLiveData.value = ingredientList
+    private fun ingredientsRetrieved(ingredientWithRecipesList: List<IngredientWithRecipes>) {
+        ingredientWithRecipesListLiveData.value = ingredientWithRecipesList
         ingredientLoadError.value = false
         loading.value = false
     }

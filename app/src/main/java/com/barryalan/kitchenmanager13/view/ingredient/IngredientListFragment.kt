@@ -9,16 +9,15 @@ import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
+import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
 import com.barryalan.kitchenmanager13.viewmodel.IngredientListViewModel
 import kotlinx.android.synthetic.main.fragment_ingredient_list.*
 
 class IngredientListFragment : Fragment() {
 
-    private val ingredientListAdapter = IngredientListAdapter(arrayListOf())
+    private val ingredientListAdapter = IngredientWithRecipesListAdapter(arrayListOf())
     private lateinit var viewModel: IngredientListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,10 +69,10 @@ class IngredientListFragment : Fragment() {
     }
 
     private fun subscribeObservers() {
-        viewModel.ingredientsLiveData.observe(viewLifecycleOwner, Observer { ingredients ->
+        viewModel.ingredientWithRecipesListLiveData.observe(viewLifecycleOwner, Observer { ingredients ->
             ingredients?.let {
                 rv_ingredientList.visibility = View.VISIBLE
-                ingredientListAdapter.updateIngredientList(ingredients, listOf())
+                ingredientListAdapter.updateIngredientList(ingredients)
             }
         })
         viewModel.ingredientLoadError.observe(viewLifecycleOwner, Observer { isError ->
