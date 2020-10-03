@@ -24,7 +24,7 @@ data class Ingredient(
 
 @Entity
 data class Amount(
-    val amount: Int,
+    val amount: Float,
     val unit: String
 ) {
     @PrimaryKey(autoGenerate = true)

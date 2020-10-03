@@ -109,7 +109,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                         )
                     val newAmount =
                         Amount(
-                            Integer.parseInt(et_newIngredientAmount.text.toString()),
+                            et_newIngredientAmount.text.toString().toFloat(),
                             sp_newIngredientUnit.selectedItem.toString()
                         )
 
