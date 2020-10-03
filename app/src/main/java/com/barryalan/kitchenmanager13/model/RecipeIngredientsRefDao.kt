@@ -2,7 +2,6 @@ package com.barryalan.kitchenmanager13.model
 
 import android.util.Log
 import androidx.room.*
-import retrofit2.http.GET
 import java.util.*
 
 @Dao
@@ -111,7 +110,7 @@ interface RecipeIngredientsRefDao {
     suspend fun insertRecipeWithIngredients(recipeWithIngredients: RecipeWithIngredients) {
 //        1)Normalize names(lowercase)
 //        2)Insert recipe
-//        3)If recipe is not inserted correctly(ID=-1) re-insert by appending a 1 to it until it works
+//        3)If recipe is not inserted correctly(ID=-1) re-insert by appending a number to it until it works
 //        4)Insert ingredients
 //        5)Retrieve IDs of items that were not inserted, using name(ID = -1)
 //        6)Insert amounts
@@ -195,7 +194,7 @@ interface RecipeIngredientsRefDao {
         //1)Give new recipe Item the correct id
         //2)Normalize the recipe name
         //3)Update recipe item
-        //4)If recipe is not inserted correctly(ID=-1) re-insert by appending a 1 to it until it works
+        //4)If recipe is not inserted correctly(updatedRows=0) re-insert by appending a number to it until it works
 
         //5)Get lists of items to be inserted and deleted
         //6)Normalize ingredient names
@@ -217,19 +216,19 @@ interface RecipeIngredientsRefDao {
 
         //3)
         // update recipe
-        var updatedRecipeID = updateRecipe(updated.recipe)
+        var updatedRows = updateRecipe(updated.recipe)
 
         //4
         //if the recipe was not updated properly due to name conflict add a number and try again
         var count = 2
         val recipeName = updated.recipe.name
-        while(updatedRecipeID == 0){
+        while(updatedRows == 0){
             count++
             updated.recipe.name = recipeName + count
-            updatedRecipeID = updateRecipe(updated.recipe)
+            updatedRows = updateRecipe(updated.recipe)
             Log.d(
                 "insertTransaction:",
-                "inserted new Recipe item: ${recipeName}, ID= $updatedRecipeID"
+                "inserted new Recipe item: ${recipeName}, ID= $updatedRows"
             )
         }
 

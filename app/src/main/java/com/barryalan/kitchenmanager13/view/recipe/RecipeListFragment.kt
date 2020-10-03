@@ -1,6 +1,7 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,7 +43,6 @@ class RecipeListFragment : BaseFragment() {
         }
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(RecipeListViewModel::class.java)
@@ -49,67 +50,13 @@ class RecipeListFragment : BaseFragment() {
         initRecyclerView()
         initRefreshLayout()
         subscribeObservers()
-
-        ab_editRecipe.setOnClickListener {
-            Navigation.findNavController(view)
-                .navigate(RecipeListFragmentDirections.actionRecipeListFragmentToNewEditFragment())
-        }
-    }
-
-    private fun confirmDeleteRequest(viewHolder: RecyclerView.ViewHolder){
-        val callback: AreYouSureCallBack = object:
-            AreYouSureCallBack {
-            override fun proceed() {
-                //First delete recipe from database
-                viewModel.deleteRecipeAndAssociations(recipeListAdapter.getRecipeList()[viewHolder.adapterPosition].ID)
-
-                //Then delete from recycler view
-                recipeListAdapter.removeItem(viewHolder)
-                //TODO CALL DELETE FROM DB
-            }
-
-            override fun cancel() {
-                recipeListAdapter.undoRemoveItem()
-                //Do nothing
-            }
-        }
-
-        uiCommunicationListener.onUIMessageReceived(
-            UIMessage(
-                getString(R.string.dialog_title_are_you_sure_delete),
-                UIMessageType.AreYouSureDialog(
-                    callback
-                )
-
-            )
-        )
     }
 
     private fun initRecyclerView() {
         rv_recipeList.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = recipeListAdapter
         }
-
-
-        val itemTouchHelperCallback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                confirmDeleteRequest(viewHolder)
-            }
-        }
-
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(rv_recipeList)
-
     }
 
     private fun initRefreshLayout() {
@@ -143,6 +90,7 @@ class RecipeListFragment : BaseFragment() {
                     listError.visibility = View.GONE
                 } else loadingView.visibility = View.GONE
             }
+
         })
     }
 }

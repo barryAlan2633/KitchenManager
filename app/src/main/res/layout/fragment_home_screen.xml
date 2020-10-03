@@ -4,24 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray"
     tools:context=".view.shared.HomeScreenFragment">
 
 
     <Button
         android:id="@+id/btnRecipes"
-        android:layout_width="wrap_content"
+        style="@style/Title4"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="List of Recipes"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/background_white"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="Recipes"
+        app:layout_constraintBottom_toTopOf="@+id/btnIngredients"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnIngredients"
-        android:layout_width="wrap_content"
+        style="@style/Title4"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="List of Ingredients"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/background_white"
+
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="Ingredients"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <Button
+        android:id="@+id/btnMealPlanner"
+        style="@style/Title4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/background_white"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="Meal Planner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnIngredients" />
+
+    <Button
+        android:id="@+id/btnGroceries"
+        style="@style/Title4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/background_white"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="Groceries"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMealPlanner" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

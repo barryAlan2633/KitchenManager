@@ -23,11 +23,20 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
     private var thisRecyclerView: RecyclerView? = null
 
     fun getRecipeList(): ArrayList<Recipe> {
+        //remove the add new recipe
+        recipeList.removeAt(0)
+
+        //return the recipe list
         return recipeList
     }
 
     fun updateRecipeList(newRecipeList: List<Recipe>) {
         recipeList.clear()
+
+        //add the addNewRecipe card
+        recipeList.add(Recipe("Add New Recipe",null))
+
+        //add the rest of the recipes
         recipeList.addAll(newRecipeList)
         notifyDataSetChanged()
     }
@@ -47,16 +56,27 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
         holder.view.tv_recipeName.text = recipeList[position].name.capitalize(Locale.ROOT)
 
         recipeList[position].image?.let {
-            holder.view.img_recipe.loadImage(
+            holder.view.img_recipe.loadCircleImage(
                 Uri.parse(it),
                 getProgressDrawable(holder.view.context)
             )
         }
-        holder.view.setOnClickListener {
 
-            val action = RecipeListFragmentDirections.actionRecipeListFragmentToDetailFragment()
-            action.recipeUID = recipeList[holder.adapterPosition].ID
-            Navigation.findNavController(holder.view).navigate(action)
+        //If this is the AddNewRecipe card
+        if(recipeList[position].ID == 0L){
+            holder.view.img_recipe.setImageDrawable(holder.view.context.resources.getDrawable(R.drawable.ic_add_black_24dp,null))
+
+        }
+        holder.view.setOnClickListener {
+            //if the id has not been initialized aka you pressed the AddNewRecipe card
+            if(recipeList[holder.adapterPosition].ID == 0L){
+                Navigation.findNavController(holder.view).navigate(RecipeListFragmentDirections.actionRecipeListFragmentToNewEditFragment())
+
+            }else{
+                val action = RecipeListFragmentDirections.actionRecipeListFragmentToDetailFragment()
+                action.recipeUID = recipeList[holder.adapterPosition].ID
+                Navigation.findNavController(holder.view).navigate(action)
+            }
         }
     }
 

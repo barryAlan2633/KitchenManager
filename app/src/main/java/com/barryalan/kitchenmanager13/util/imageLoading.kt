@@ -9,7 +9,7 @@ import com.barryalan.kitchenmanager13.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-fun ImageView.loadImage(uri: Uri?, progressDrawable: CircularProgressDrawable) {
+fun ImageView.loadCircleImage(uri: Uri?, progressDrawable: CircularProgressDrawable) {
     val options = RequestOptions()
         .placeholder(progressDrawable)
         .error(R.drawable.ic_error_black_24dp)
@@ -20,8 +20,18 @@ fun ImageView.loadImage(uri: Uri?, progressDrawable: CircularProgressDrawable) {
         .into(this)
 }
 
-fun loadImage(view: ImageButton, url: Uri?){
-    view.loadImage(url, getProgressDrawable(view.context))
+fun ImageView.loadImage(uri: Uri?, progressDrawable: CircularProgressDrawable) {
+    val options = RequestOptions()
+        .placeholder(progressDrawable)
+        .error(R.drawable.ic_error_black_24dp)
+    Glide.with(context)
+        .setDefaultRequestOptions(options)
+        .load(uri)
+        .into(this)
+}
+
+fun loadCircleImage(view: ImageButton, url: Uri?){
+    view.loadCircleImage(url, getProgressDrawable(view.context))
 }
 
 fun getProgressDrawable(context: Context): CircularProgressDrawable {

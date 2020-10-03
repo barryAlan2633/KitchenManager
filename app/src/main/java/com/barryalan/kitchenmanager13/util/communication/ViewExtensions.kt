@@ -4,6 +4,7 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.barryalan.kitchenmanager13.R
 
 fun Activity.displayToast(@StringRes message: Int) {
@@ -16,6 +17,7 @@ fun Activity.displayToast(message: String) {
 
 fun Activity.displaySuccessDialog(message: String?) {
     MaterialDialog(this)
+        .cornerRadius(12f)
         .show {
             title(R.string.dialog_title_success)
             message(text = message)
@@ -25,6 +27,7 @@ fun Activity.displaySuccessDialog(message: String?) {
 
 fun Activity.displayErrorDialog(errorMessage: String?) {
     MaterialDialog(this)
+        .cornerRadius(12f)
         .show {
             title(R.string.dialog_title_error)
             message(text = errorMessage)
@@ -34,6 +37,7 @@ fun Activity.displayErrorDialog(errorMessage: String?) {
 
 fun Activity.displayInfoDialog(message: String?) {
     MaterialDialog(this)
+        .cornerRadius(12f)
         .show {
             title(R.string.dialog_title_info)
             message(text = message)
@@ -43,6 +47,7 @@ fun Activity.displayInfoDialog(message: String?) {
 
 fun Activity.areYouSureDialog(message: String, callback: AreYouSureCallBack) {
     MaterialDialog(this)
+        .cornerRadius(12f)
         .show {
             title(R.string.dialog_title_are_you_sure)
             message(text = message)
@@ -54,6 +59,8 @@ fun Activity.areYouSureDialog(message: String, callback: AreYouSureCallBack) {
             }
         }
 }
+
+
 
 interface AreYouSureCallBack {
 

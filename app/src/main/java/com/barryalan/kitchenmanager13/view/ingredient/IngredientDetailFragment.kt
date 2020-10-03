@@ -4,12 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -21,15 +18,13 @@ import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
-import com.barryalan.kitchenmanager13.util.loadImage
+import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
 import com.barryalan.kitchenmanager13.viewmodel.IngredientDetailViewModel
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.*
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.btn_cancel
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.et_ingredientNameDetail
-import kotlinx.android.synthetic.main.fragment_recipe_new_edit.*
-import kotlinx.android.synthetic.main.item_ingredient.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -151,7 +146,7 @@ class IngredientDetailFragment : BaseFragment(){
                     data?.let { intent ->
                         mIngredientImageURIString = intent.extras?.get("photoURI").toString()
 
-                        img_ingredientDetail.loadImage(
+                        img_ingredientDetail.loadCircleImage(
                             intent.extras?.get("photoURI") as Uri?,
                             getProgressDrawable(requireContext())
                         )
@@ -176,7 +171,7 @@ class IngredientDetailFragment : BaseFragment(){
 //                )
                 it.image?.let { imageURI ->
                     mIngredientImageURIString = imageURI
-                    img_ingredientDetail.loadImage(
+                    img_ingredientDetail.loadCircleImage(
                         Uri.parse(imageURI),
                         getProgressDrawable(requireContext())
                     )

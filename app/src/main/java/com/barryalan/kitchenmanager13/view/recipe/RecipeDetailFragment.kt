@@ -14,12 +14,12 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
+import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.viewmodel.RecipeDetailViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_detail.*
 import kotlinx.android.synthetic.main.fragment_recipe_detail.ab_editRecipe
-import kotlinx.android.synthetic.main.item_ingredient.*
 import java.util.*
 
 class RecipeDetailFragment : Fragment() {
@@ -34,7 +34,8 @@ class RecipeDetailFragment : Fragment() {
         // This callback will only be called when MyFragment is at least Started.
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle the back button event
-            Navigation.findNavController(requireView()).navigate(RecipeDetailFragmentDirections.actionDetailFragmentToRecipeListFragment())
+            Navigation.findNavController(requireView())
+                .navigate(RecipeDetailFragmentDirections.actionDetailFragmentToRecipeListFragment())
         }
     }
 
@@ -60,33 +61,39 @@ class RecipeDetailFragment : Fragment() {
 
         ab_editRecipe.setOnClickListener {
             val action = RecipeDetailFragmentDirections.actionDetailFragmentToNewEditFragment()
-            if(mSelectedRecipeID != 0L){
+            if (mSelectedRecipeID != 0L) {
                 action.recipeUID = mSelectedRecipeID
                 Navigation.findNavController(view).navigate(action)
 
-            }else{
-                Toast.makeText(context,"invalid action id: $mSelectedRecipeID",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "invalid action id: $mSelectedRecipeID", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     private fun initRecyclerView() {
         rv_ingredientList.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = ingredientListAdapter
         }
     }
 
     @ExperimentalStdlibApi
     private fun subscribeObservers() {
-        viewModel.recipeWithIngredientsLiveData.observe(viewLifecycleOwner, Observer { recipeWithIngredients ->
-            recipeWithIngredients?.let {
-                tv_recipeName.text = it.recipe.name.capitalize(Locale.ROOT)
-                it.recipe.image?.let {imageURI->
-                    img_recipe.loadImage(Uri.parse(imageURI), getProgressDrawable(requireContext()))
+        viewModel.recipeWithIngredientsLiveData.observe(
+            viewLifecycleOwner,
+            Observer { recipeWithIngredients ->
+                recipeWithIngredients?.let {
+                    tv_recipeName.text = it.recipe.name.capitalize(Locale.ROOT)
+                    it.recipe.image?.let { imageURI ->
+                        img_recipe.loadCircleImage(
+                            Uri.parse(imageURI),
+                            getProgressDrawable(requireContext())
+                        )
+                    }
+                    ingredientListAdapter.updateIngredientList(it.ingredients, it.amounts)
                 }
-                ingredientListAdapter.updateIngredientList(it.ingredients,it.amounts)
-            }
-        })
+            })
     }
 }

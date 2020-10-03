@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="125dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal">
+    android:layout_width="118dp"
+    android:layout_height="200dp"
+    android:layout_margin="4dp"
+    android:background="@drawable/background_white"
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/img_ingredient"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
         android:layout_weight="2"
         android:padding="4dp"
-        android:src="@drawable/ic_error_black_24dp"  />
+        android:src="@drawable/ic_error_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+
+    <TextView
+        android:id="@+id/et_ingredientName"
+        style="@style/Title3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="3"
-        android:orientation="vertical"
-        android:padding="4dp">
-
-        <TextView
-            android:id="@+id/et_ingredientName"
-            style="@style/Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Milk"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_ingredientAmount"
-                style="@style/Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="1"/>
-            <TextView
-                android:id="@+id/tv_ingredientAmountUnit"
-                style="@style/Title"
-                android:layout_marginStart="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Unit"/>
-        </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_ingredient"
+        tools:text="Milk" />
 
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_ingredientAmount"
+        style="@style/Title3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.296"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_ingredientName"
+        tools:text="1" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_ingredientAmountUnit"
+        style="@style/Title3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ingredientAmount"
+        app:layout_constraintStart_toEndOf="@+id/tv_ingredientAmount"
+        app:layout_constraintTop_toTopOf="@+id/tv_ingredientAmount"
+        tools:text="Unit" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
