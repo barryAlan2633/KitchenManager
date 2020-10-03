@@ -13,16 +13,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.barryalan.kitchenmanager13.R
+import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
+import com.barryalan.kitchenmanager13.util.communication.UICommunicationListener
+import com.barryalan.kitchenmanager13.util.communication.UIMessage
+import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
+import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.viewmodel.RecipeDetailViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_detail.*
 import kotlinx.android.synthetic.main.fragment_recipe_detail.ab_editRecipe
 import java.util.*
 
-class RecipeDetailFragment : Fragment() {
+class RecipeDetailFragment : BaseFragment() {
 
     private val ingredientListAdapter = IngredientListAdapter(arrayListOf())
     private lateinit var viewModel: RecipeDetailViewModel
@@ -69,6 +74,26 @@ class RecipeDetailFragment : Fragment() {
                 Toast.makeText(context, "invalid action id: $mSelectedRecipeID", Toast.LENGTH_SHORT)
                     .show()
             }
+        }
+
+        ab_deleteRecipe.setOnClickListener {
+            val callback: AreYouSureCallBack = object :
+                AreYouSureCallBack {
+                override fun proceed() {
+                    viewModel.deleteRecipeWithIngredients(mSelectedRecipeID)
+                    Navigation.findNavController(it).navigate(RecipeDetailFragmentDirections.actionDetailFragmentToRecipeListFragment())
+                }
+
+                override fun cancel() {
+                }
+
+            }
+            uiCommunicationListener.onUIMessageReceived(
+                UIMessage(
+                    "Are you sure you want to delete this recipe? This action cannot be un-done",
+                    UIMessageType.AreYouSureDialog(callback)
+                )
+            )
         }
     }
 

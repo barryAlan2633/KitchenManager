@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.barryalan.kitchenmanager13.model.AppDatabase
+import com.barryalan.kitchenmanager13.model.Recipe
 import com.barryalan.kitchenmanager13.model.RecipeWithIngredients
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,15 +19,22 @@ class RecipeDetailViewModel(application: Application) : BaseViewModel(applicatio
         retrieveRecipeWithIngredientsFromDB(recipeID)
     }
 
-    private fun retrieveRecipeWithIngredientsFromDB(recipeID: Long){
+    private fun retrieveRecipeWithIngredientsFromDB(recipeID: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            val recipeWithIngredientsDetails = AppDatabase(getApplication()).recipeIngredientsRefDao().getRecipeWithIngredients(recipeID)
+            val recipeWithIngredientsDetails =
+                AppDatabase(getApplication()).recipeIngredientsRefDao()
+                    .getRecipeWithIngredients(recipeID)
 
-            Log.d("debug:",recipeWithIngredientsDetails.toString())
-            withContext(Dispatchers.Main){
+            Log.d("debug:", recipeWithIngredientsDetails.toString())
+            withContext(Dispatchers.Main) {
                 recipeWithIngredientsLiveData.value = recipeWithIngredientsDetails
             }
         }
     }
 
+    fun deleteRecipeWithIngredients(recipeID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            AppDatabase(getApplication()).recipeIngredientsRefDao().deleteRecipeAndAssociations(recipeID)
+        }
+    }
 }

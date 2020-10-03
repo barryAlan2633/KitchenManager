@@ -32,16 +32,17 @@ class RecipeListViewModel(application: Application) : BaseViewModel(application)
         }
     }
 
-    fun deleteRecipe(recipe: Recipe){
-        viewModelScope.launch(Dispatchers.IO) {
-            AppDatabase(getApplication()).recipeIngredientsRefDao().deleteRecipe(recipe)
-        }
-    }
+
 
     private fun recipesRetrieved(recipeList: List<Recipe>) {
         recipesLiveData.value = recipeList
         recipeLoadError.value = false
         loading.value = false
+    }
+    fun deleteRecipe(recipe: Recipe){
+        viewModelScope.launch(Dispatchers.IO) {
+            AppDatabase(getApplication()).recipeIngredientsRefDao().deleteRecipe(recipe)
+        }
     }
 
     fun deleteRecipeAndAssociations(recipeID:Long) {
