@@ -49,7 +49,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/ab_deleteRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="25dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_delete_forever_black_24dp"
+        app:backgroundTint="@color/black"
+        app:borderWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -74,19 +88,18 @@
             android:paddingBottom="4dp" />
 
     </LinearLayout>
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/ab_editIngredients"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="8dp"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        android:src="@drawable/ic_edit_black_24dp"-->
-<!--        app:backgroundTint="@color/black"-->
-<!--        app:borderWidth="1dp"-->
-<!--        app:fabSize="mini"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/rv_ingredientList"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/rv_ingredientList" />-->
-
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--        android:id="@+id/ab_editIngredients"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="8dp"-->
+    <!--        android:backgroundTint="@color/white"-->
+    <!--        android:src="@drawable/ic_edit_black_24dp"-->
+    <!--        app:backgroundTint="@color/black"-->
+    <!--        app:borderWidth="1dp"-->
+    <!--        app:fabSize="mini"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/rv_ingredientList"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/rv_ingredientList" />-->
 
 
     <TextView
