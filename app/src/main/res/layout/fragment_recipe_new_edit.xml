@@ -3,167 +3,184 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray">
+
+
+    <ImageView
+        android:id="@+id/img_recipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="Recipe Image"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:scaleType="fitEnd"
+        android:src="@drawable/ic_error_black_24dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        style="@style/Title3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Name:"
+        android:textAlignment="center"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/tv_recipeName"
+        style="@style/Title2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints="Recipe name"
+        android:hint="Recipe name"
+        android:inputType="text"
+        android:text=""
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/img_recipe"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/img_recipe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:contentDescription="Recipe Image"
-            android:minHeight="100dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_error_black_24dp"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView"
-            style="@style/Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="Name:"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toStartOf="@+id/tv_recipeName"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_recipe" />
-
-        <EditText
-            android:id="@+id/tv_recipeName"
-            style="@style/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:autofillHints="Recipe name"
-            android:hint="Recipe name"
-            android:text=""
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="@+id/textView" />
-    </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_ingredientList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/btn_updateSaveRecipe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toTopOf="@+id/textView4">
 
-
-    <TextView
-        android:id="@+id/textView3"
-        style="@style/Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Ingredient:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_ingredientList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_white"
+            android:paddingTop="20dp"
+            android:paddingBottom="4dp"
+            tools:itemCount="20"
+            tools:listitem="@layout/item_ingredient" />
+    </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/ly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/textView3">
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_white"
+        android:orientation="vertical"
+        android:paddingStart="8dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="8dp">
+
 
         <ImageView
             android:id="@+id/img_newIngredient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:contentDescription="Ingredient Image"
-            android:maxHeight="100dp"
+            android:minWidth="50dp"
             android:minHeight="50dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_error_black_24dp"
             android:textAlignment="center" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_newIngredientName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="8"
+                android:autofillHints="Ingredient name"
+                android:hint="Name"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/et_newIngredientAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:autofillHints="Ingredient name"
+                android:hint="Amount"
+                android:inputType="numberDecimal" />
+
+            <Spinner
+                android:id="@+id/sp_newIngredientUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                tools:listitem="@android:layout/simple_spinner_item" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_addIngredient"
+            style="@style/Text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@drawable/background_gray"
+            android:padding="8dp"
+            android:text="Add Ingredient" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-
-        <EditText
-            android:id="@+id/et_newIngredientName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="8"
-            android:autofillHints="Ingredient name"
-            android:hint="Name"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/et_newIngredientAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:autofillHints="Ingredient name"
-            android:hint="Amount"
-            android:inputType="numberDecimal" />
-        <Spinner
-            android:id="@+id/sp_newIngredientUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="3"
-            tools:listitem="@android:layout/simple_spinner_item"/>
-
-    </LinearLayout>
-
-
-    <Button
-        android:id="@+id/btn_addIngredient"
+    <TextView
+        android:id="@+id/textView3"
+        style="@style/Title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Ingredient"
+        android:background="@drawable/background_white"
+        android:padding="8dp"
+        android:text="New Ingredient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/img_recipe" />
 
     <TextView
         android:id="@+id/textView4"
-        style="@style/Title"
+        style="@style/Title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingredients:"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_white"
+        android:padding="8dp"
+        android:text="Ingredients"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_addIngredient" />
+        app:layout_constraintTop_toBottomOf="@+id/ly" />
 
     <Button
         android:id="@+id/btn_updateSaveRecipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/background_white"
         android:text="save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
@@ -173,6 +190,7 @@
         android:id="@+id/btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_white"
         android:text="cancel"
         app:layout_constraintBottom_toBottomOf="@+id/btn_updateSaveRecipe"
         app:layout_constraintEnd_toEndOf="parent"

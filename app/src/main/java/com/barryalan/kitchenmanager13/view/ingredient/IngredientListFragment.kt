@@ -9,6 +9,7 @@ import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
@@ -53,7 +54,7 @@ class IngredientListFragment : Fragment() {
 
     private fun initRecyclerView() {
         rv_ingredientList.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = ingredientListAdapter
         }
     }

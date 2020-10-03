@@ -5,14 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.Amount
 import com.barryalan.kitchenmanager13.model.Ingredient
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
-import com.barryalan.kitchenmanager13.util.loadImage
+import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.item_ingredient.view.*
 import java.util.*
@@ -71,7 +70,7 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
 
         ingredientList[position].image?.let {
-            holder.view.img_ingredient.loadImage(
+            holder.view.img_ingredient.loadCircleImage(
                 Uri.parse(ingredientList[position].image),
                 getProgressDrawable(holder.view.context)
             )

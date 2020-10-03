@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
-import com.barryalan.kitchenmanager13.util.loadImage
+import com.barryalan.kitchenmanager13.util.loadCircleImage
 import kotlinx.android.synthetic.main.item_ingredient_with_recipes.view.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,7 +46,7 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
         holder.view.tv_amountOfRecipes.text = ingredientList[position].recipes.size.toString()
 
         ingredientList[position].ingredient.image?.let {
-            holder.view.img_ingredientWR.loadImage(
+            holder.view.img_ingredientWR.loadCircleImage(
                 Uri.parse(ingredientList[position].ingredient.image),
                 getProgressDrawable(holder.view.context)
             )

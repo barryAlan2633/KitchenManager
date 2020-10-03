@@ -1,11 +1,9 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +27,7 @@ import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
-import com.barryalan.kitchenmanager13.util.loadImage
+import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
@@ -116,7 +114,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                         )
 
                     //add to recyclerview
-                    ingredientListAdapter.addIngredientItem(newIngredient,newAmount)
+                    ingredientListAdapter.addIngredientItem(newIngredient, newAmount)
 
                     //clear fields
                     et_newIngredientName.text.clear()
@@ -166,7 +164,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
 
     private fun initRecyclerView() {
         rv_ingredientList.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = ingredientListAdapter
         }
 
@@ -267,7 +265,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     data?.let { intent ->
                         mRecipeImageURIString = intent.extras?.get("photoURI").toString()
 
-                        img_recipe.loadImage(
+                        img_recipe.loadCircleImage(
                             intent.extras?.get("photoURI") as Uri?,
                             getProgressDrawable(requireContext())
                         )
@@ -278,7 +276,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     data?.let { intent ->
                         mIngredientImageURIString = intent.extras?.get("photoURI").toString()
 
-                        img_newIngredient.loadImage(
+                        img_newIngredient.loadCircleImage(
                             intent.extras?.get("photoURI") as Uri?,
                             getProgressDrawable(requireContext())
                         )
@@ -296,8 +294,11 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     Navigation.findNavController(view)
                         .navigate(RecipeNewEditFragmentDirections.actionRecipeNewEditFragmentToRecipeListFragment())
                 } else {//User is in this fragment to edit an existing recipe
+                    val action =
+                        RecipeNewEditFragmentDirections.actionNewEditFragmentToRecipeDetailFragment()
+                    action.recipeUID = mRecipeToEditUID
                     Navigation.findNavController(view)
-                        .navigate(RecipeNewEditFragmentDirections.actionNewEditFragmentToRecipeDetailFragment())
+                        .navigate(action)
                 }
 
                 //TODO CALL DELETE FROM DB
@@ -325,11 +326,17 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     tv_recipeName.setText(recipeWithIngredients.recipe.name.capitalize(Locale.ROOT))
 
                     recipeWithIngredients.recipe.image?.let {
-                        img_recipe.loadImage(Uri.parse(it), getProgressDrawable(requireContext()))
+                        img_recipe.loadCircleImage(
+                            Uri.parse(it),
+                            getProgressDrawable(requireContext())
+                        )
                         mRecipeImageURIString = it
                     }
 
-                    ingredientListAdapter.updateIngredientList(recipeWithIngredients.ingredients,recipeWithIngredients.amounts)
+                    ingredientListAdapter.updateIngredientList(
+                        recipeWithIngredients.ingredients,
+                        recipeWithIngredients.amounts
+                    )
                 }
             })
     }
