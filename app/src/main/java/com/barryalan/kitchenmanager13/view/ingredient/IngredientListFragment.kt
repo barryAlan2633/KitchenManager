@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_ingredient_list.*
 
 class IngredientListFragment : Fragment() {
 
-    private val ingredientListAdapter = IngredientWithRecipesListAdapter(arrayListOf())
+    private lateinit var ingredientListAdapter:IngredientWithRecipesListAdapter
     private lateinit var viewModel: IngredientListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +55,10 @@ class IngredientListFragment : Fragment() {
     private fun initRecyclerView() {
         rv_ingredientList.apply {
             layoutManager = GridLayoutManager(context, 3)
+            ingredientListAdapter = IngredientWithRecipesListAdapter(ArrayList(),viewModel)
+            ingredientListAdapter.setViewModel(viewModel)
             adapter = ingredientListAdapter
+
         }
     }
 
@@ -70,12 +73,14 @@ class IngredientListFragment : Fragment() {
     }
 
     private fun subscribeObservers() {
-        viewModel.ingredientWithRecipesListLiveData.observe(viewLifecycleOwner, Observer { ingredients ->
-            ingredients?.let {
-                rv_ingredientList.visibility = View.VISIBLE
-                ingredientListAdapter.updateIngredientList(ingredients)
-            }
-        })
+        viewModel.ingredientWithRecipesListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { ingredients ->
+                ingredients?.let {
+                    rv_ingredientList.visibility = View.VISIBLE
+                    ingredientListAdapter.updateIngredientList(ingredients)
+                }
+            })
         viewModel.ingredientLoadError.observe(viewLifecycleOwner, Observer { isError ->
             isError?.let {
                 listError.visibility = if (it) View.VISIBLE else View.GONE

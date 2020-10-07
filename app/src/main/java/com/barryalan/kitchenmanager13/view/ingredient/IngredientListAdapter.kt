@@ -1,10 +1,14 @@
 package com.barryalan.kitchenmanager13.view.ingredient
 
 import android.net.Uri
+import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
@@ -14,6 +18,7 @@ import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.item_ingredient.view.*
+import kotlinx.android.synthetic.main.item_ingredient_with_recipes.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -36,7 +41,7 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
         amounts.clear()
         amounts.addAll(newAmounts)
-        Log.d("debug",amounts.toString())
+        Log.d("debug", amounts.toString())
 
         notifyDataSetChanged()
     }
@@ -62,10 +67,9 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
         holder.view.et_ingredientName.text = ingredientList[position].name.capitalize(Locale.ROOT)
 
-        if(amounts.isNotEmpty()){
+        if (amounts.isNotEmpty()) {
             holder.view.tv_ingredientAmount.text = amounts[position].amount.toString()
             holder.view.tv_ingredientAmountUnit.text = amounts[position].unit
-
         }
 
 

@@ -54,6 +54,9 @@ interface RecipeIngredientsRefDao {
     @Delete
     suspend fun deleteIngredient(ingredient: Ingredient)
 
+    @Query("DELETE FROM Ingredient WHERE ingredientID = :ingredientID")
+    suspend fun deleteIngredient(ingredientID: Long)
+
     @Update
     suspend fun updateIngredient(ingredient: Ingredient)
 

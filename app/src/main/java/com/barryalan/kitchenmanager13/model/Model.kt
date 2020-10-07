@@ -2,7 +2,7 @@ package com.barryalan.kitchenmanager13.model
 
 import androidx.room.*
 
-@Entity(indices = [Index(value = ["name"],unique = true)])
+@Entity(indices = [Index(value = ["name"], unique = true)])
 data class Recipe(
     var name: String,
     val image: String?
@@ -12,7 +12,7 @@ data class Recipe(
     var ID: Long = 0
 }
 
-@Entity(indices = [Index(value = ["name"],unique = true)])
+@Entity(indices = [Index(value = ["name"], unique = true)])
 data class Ingredient(
     var name: String,
     val image: String?
@@ -32,11 +32,12 @@ data class Amount(
     var ID: Long = 0
 }
 
-@Entity(primaryKeys = ["recipeID", "ingredientID","amountID"])
+
+@Entity(primaryKeys = ["recipeID", "ingredientID", "amountID"])
 data class RecipeIngredientRef(
     val recipeID: Long,
     val ingredientID: Long,
-    val amountID:Long
+    val amountID: Long
 )
 
 data class RecipeWithIngredients(
@@ -54,20 +55,22 @@ data class RecipeWithIngredients(
     )
     val ingredients: List<Ingredient>,
 
-    @Relation(parentColumn = "recipeID",
+    @Relation(
+        parentColumn = "recipeID",
         entity = Amount::class,
         entityColumn = "amountID",
         associateBy = Junction(
             value = RecipeIngredientRef::class,
             parentColumn = "recipeID",
             entityColumn = "amountID"
-        ))
+        )
+    )
     val amounts: List<Amount>
 )
 
 data class IngredientWithRecipes(
     @Embedded
-    val ingredient:Ingredient,
+    val ingredient: Ingredient,
     @Relation(
         parentColumn = "ingredientID",
         entity = Recipe::class,
@@ -80,4 +83,6 @@ data class IngredientWithRecipes(
     )
     val recipes: List<Recipe>
 )
+
+
 

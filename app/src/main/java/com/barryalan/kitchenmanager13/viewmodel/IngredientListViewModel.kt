@@ -19,10 +19,15 @@ class IngredientListViewModel(application: Application) : BaseViewModel(applicat
         retrieveIngredientsFromDB()
     }
 
+    fun deleteIngredient(ingredientID: Long){
+        deleteIngredientFromDB(ingredientID)
+    }
+
     private fun retrieveIngredientsFromDB() {
         loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            val ingredients = AppDatabase(getApplication()).recipeIngredientsRefDao().getAllIngredientWithRecipes()
+            val ingredients = AppDatabase(getApplication()).recipeIngredientsRefDao()
+                .getAllIngredientWithRecipes()
 
             withContext(Dispatchers.Main) {
                 ingredientsRetrieved(ingredients)
@@ -34,5 +39,11 @@ class IngredientListViewModel(application: Application) : BaseViewModel(applicat
         ingredientWithRecipesListLiveData.value = ingredientWithRecipesList
         ingredientLoadError.value = false
         loading.value = false
+    }
+
+    private fun deleteIngredientFromDB(ingredientID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            AppDatabase(getApplication()).recipeIngredientsRefDao().deleteIngredient(ingredientID)
+        }
     }
 }

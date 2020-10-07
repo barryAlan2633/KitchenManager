@@ -9,6 +9,20 @@
     android:padding="8dp"
     android:layout_margin="8dp">
 
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/ab_deleteIngredient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_delete_forever_black_24dp"
+        app:backgroundTint="@color/black"
+        app:borderWidth="1dp"
+        app:fabSize="mini"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/img_ingredientWR"
         android:layout_width="match_parent"
