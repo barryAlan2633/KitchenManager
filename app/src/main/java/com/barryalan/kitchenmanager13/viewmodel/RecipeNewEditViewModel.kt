@@ -5,12 +5,14 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.barryalan.kitchenmanager13.model.AppDatabase
+import com.barryalan.kitchenmanager13.model.Ingredient
 import com.barryalan.kitchenmanager13.model.RecipeWithIngredients
 import kotlinx.coroutines.*
 
 class RecipeNewEditViewModel(application: Application) : BaseViewModel(application) {
 
     val recipeToUpdateLiveData = MutableLiveData<RecipeWithIngredients>()
+    val ingredientListLiveData = MutableLiveData<List<Ingredient>>()
 
     @ExperimentalStdlibApi
     fun saveRecipeWithIngredients(newRecipeWithIngredients: RecipeWithIngredients):Job {
@@ -19,8 +21,12 @@ class RecipeNewEditViewModel(application: Application) : BaseViewModel(applicati
         }
     }
 
-    fun fetch(recipeID: Long) {
+    fun fetchSelectedRecipeWI(recipeID: Long) {
         retrieveRecipeWithIngredientsFromDB(recipeID)
+    }
+
+    fun fetchIngredientList(){
+        retrieveIngredientListFromDB()
     }
 
     private fun retrieveRecipeWithIngredientsFromDB(recipeID: Long){
@@ -48,6 +54,17 @@ class RecipeNewEditViewModel(application: Application) : BaseViewModel(applicati
             }
             if(recipeToUpdateLiveData.value == null){
                 Log.d("Error:", "recipeToUpdate has not been retrieved")
+            }
+        }
+    }
+
+
+    private fun retrieveIngredientListFromDB(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val ingredientList = AppDatabase(getApplication()).recipeIngredientsRefDao().getAllIngredients()
+
+            withContext(Dispatchers.Main){
+                ingredientListLiveData.value = ingredientList
             }
         }
     }
