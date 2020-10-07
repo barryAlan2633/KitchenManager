@@ -29,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class IngredientDetailFragment : BaseFragment(){
+class IngredientDetailFragment : BaseFragment() {
 
     private lateinit var viewModel: IngredientDetailViewModel
     private var mIngredientImageURIString: String? = null
@@ -162,13 +162,6 @@ class IngredientDetailFragment : BaseFragment(){
         viewModel.selectedIngredientLiveData.observe(viewLifecycleOwner, Observer { ingredient ->
             ingredient?.let { it ->
                 et_ingredientNameDetail.setText(ingredient.name.capitalize(Locale.ROOT))
-//                et_ingredientAmountDetail.setText(
-//                    String.format(
-//                        Locale.getDefault(),
-//                        "%d",
-//                        ingredient.amount
-//                    )
-//                )
                 it.image?.let { imageURI ->
                     mIngredientImageURIString = imageURI
                     img_ingredientDetail.loadCircleImage(
