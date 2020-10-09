@@ -1,11 +1,15 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -19,7 +23,11 @@ import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.viewmodel.RecipeListViewModel
+import kotlinx.android.synthetic.main.fragment_ingredient_list.*
 import kotlinx.android.synthetic.main.fragment_recipe_list.*
+import kotlinx.android.synthetic.main.fragment_recipe_list.listError
+import kotlinx.android.synthetic.main.fragment_recipe_list.loadingView
+import kotlinx.android.synthetic.main.fragment_recipe_list.refreshLayout
 
 
 class RecipeListFragment : BaseFragment() {
@@ -57,6 +65,26 @@ class RecipeListFragment : BaseFragment() {
             layoutManager = GridLayoutManager(context, 3)
             adapter = recipeListAdapter
         }
+
+        recipe_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                recipeListAdapter.filter.filter(newText)
+                return false
+            }
+
+        })
+        val searchIcon = recipe_search.findViewById<ImageView>(R.id.search_mag_icon)
+        searchIcon.setColorFilter(Color.WHITE)
+
+        val cancelIcon = recipe_search.findViewById<ImageView>(R.id.search_close_btn)
+        cancelIcon.setColorFilter(Color.WHITE)
+
+        val textView = recipe_search.findViewById<TextView>(R.id.search_src_text)
+        textView.setTextColor(Color.WHITE)
     }
 
     private fun initRefreshLayout() {

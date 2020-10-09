@@ -318,7 +318,6 @@ interface RecipeIngredientsRefDao {
 
     @Transaction
     suspend fun deleteRecipeAndAssociations(recipeID: Long) {
-        //TODO fix this mess
         //delete this recipe
         deleteRecipe(recipeID)
 

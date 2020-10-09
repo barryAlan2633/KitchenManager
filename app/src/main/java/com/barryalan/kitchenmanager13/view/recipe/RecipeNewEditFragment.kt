@@ -320,8 +320,6 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     Navigation.findNavController(view)
                         .navigate(action)
                 }
-
-                //TODO CALL DELETE FROM DB
             }
 
             override fun cancel() {
