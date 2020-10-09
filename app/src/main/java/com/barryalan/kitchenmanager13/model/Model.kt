@@ -5,7 +5,8 @@ import androidx.room.*
 @Entity(indices = [Index(value = ["name"], unique = true)])
 data class Recipe(
     var name: String,
-    val image: String?
+    val image: String?,
+    val type: String
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "recipeID")

@@ -42,11 +42,12 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
     private val ingredientListAdapter = IngredientListAdapter(arrayListOf())
     private lateinit var viewModel: RecipeNewEditViewModel
 
+    private var mSelectedRecipeType: String? = null
     private var mRecipeToEditUID: Long = -1L
     private var mRecipeImageURIString: String? = null
     private var mIngredientImageURIString: String? = null
     private var mIngredientSelectedUnit: String = "Unit"
-    private var mIngredientList:MutableList<Ingredient> = mutableListOf()
+    private var mIngredientList: MutableList<Ingredient> = mutableListOf()
     private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +81,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
             viewModel.fetchSelectedRecipeWI(mRecipeToEditUID)
         }
         initRecyclerView()
+        initRecipeTypeSpinner()
         initUnitSpinner()
         initSelectIngredientSpinner()
         subscribeObservers()
@@ -141,6 +143,13 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                         UIMessageType.ErrorDialog()
                     )
                 )
+            } else if (mSelectedRecipeType == null) {
+                uiCommunicationListener.onUIMessageReceived(
+                    UIMessage(
+                        "Recipe must have a type. (Drink or Food)",
+                        UIMessageType.ErrorDialog()
+                    )
+                )
             } else {
                 if (mRecipeToEditUID == -1L) { //User is in this fragment to make a new recipe
                     saveNewRecipe(it)
@@ -190,6 +199,23 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
         itemTouchHelper.attachToRecyclerView(rv_ingredientList)
     }
 
+    private fun initRecipeTypeSpinner() {
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.recipe_type,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            // Apply the adapter to the spinner
+            sp_newRecipeType.adapter = adapter
+            sp_newRecipeType.onItemSelectedListener = this
+
+        }
+    }
+
     private fun initUnitSpinner() {
         ArrayAdapter.createFromResource(
             requireContext(),
@@ -230,7 +256,11 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
 
         //create new recipeWithIngredients item
         val newRecipeWithIngredients = RecipeWithIngredients(
-            Recipe(tv_recipeName.text.toString().trim(), mRecipeImageURIString),
+            Recipe(
+                tv_recipeName.text.toString().trim(),
+                mRecipeImageURIString,
+                mSelectedRecipeType!!
+            ),
             ingredientListAdapter.getIngredientList(),
             ingredientListAdapter.getAmountsList()
         )
@@ -255,7 +285,11 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
         //TODO probably can refactor this out of the if statement and only write it once, rename it
         //create new recipeWithIngredients item with data from screen
         val updatedRecipeWithIngredients = RecipeWithIngredients(
-            Recipe(tv_recipeName.text.toString().trim(), mRecipeImageURIString),
+            Recipe(
+                tv_recipeName.text.toString().trim(),
+                mRecipeImageURIString,
+                mSelectedRecipeType!!
+            ),
             ingredientListAdapter.getIngredientList(),
             ingredientListAdapter.getAmountsList()
         )
@@ -335,6 +369,52 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
         )
     }
 
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        when (parent!!.id) {
+            R.id.sp_newIngredientUnit -> {
+
+            }
+
+            R.id.sp_selectIngredient -> {
+
+            }
+
+            R.id.sp_newRecipeType -> {
+
+            }
+        }
+
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, p3: Long) {
+
+        when (parent!!.id) {
+            R.id.sp_newIngredientUnit -> {
+                mIngredientSelectedUnit = parent.getItemAtPosition(position).toString()
+
+            }
+
+            R.id.sp_selectIngredient -> {
+                if (position != 0) {
+
+                    //-1 is the offset for the "nothing selected" option
+                    et_newIngredientName.setText(mIngredientList[position - 1].name)
+                    mIngredientImageURIString = mIngredientList[position - 1].image
+                    img_newIngredient.loadCircleImage(
+                        Uri.parse(mIngredientImageURIString),
+                        getProgressDrawable(requireContext())
+                    )
+                }
+            }
+
+            R.id.sp_newRecipeType -> {
+                if(position != 0){
+                    mSelectedRecipeType = parent.getItemAtPosition(position).toString()
+                }
+            }
+        }
+    }
+
     @ExperimentalStdlibApi
     private fun subscribeObservers() {
         viewModel.recipeToUpdateLiveData.observe(
@@ -342,6 +422,12 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
             Observer { recipeWithIngredients ->
                 recipeWithIngredients?.let {
                     tv_recipeName.setText(recipeWithIngredients.recipe.name.capitalize(Locale.ROOT))
+
+                    if(recipeWithIngredients.recipe.type == "Drink"){
+                        sp_newRecipeType.setSelection(1)
+                    }else{
+                        sp_newRecipeType.setSelection(2)
+                    }
 
                     recipeWithIngredients.recipe.image?.let {
                         img_recipe.loadCircleImage(
@@ -369,40 +455,6 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                 adapter.notifyDataSetChanged()
             }
         })
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        when(parent!!.id){
-            R.id.sp_newIngredientUnit ->{
-
-            }
-
-            R.id.sp_selectIngredient->{
-
-            }
-        }
-
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, p3: Long) {
-
-        when(parent!!.id){
-            R.id.sp_newIngredientUnit ->{
-                mIngredientSelectedUnit = parent.getItemAtPosition(position).toString()
-
-            }
-
-            R.id.sp_selectIngredient->{
-                if(position != 0){
-
-                    //-1 is the offset for the "nothing selected" option
-                    et_newIngredientName.setText(mIngredientList[position-1].name)
-                    mIngredientImageURIString = mIngredientList[position-1].image
-                    img_newIngredient.loadCircleImage(Uri.parse(mIngredientImageURIString),
-                        getProgressDrawable(requireContext()))
-                }
-            }
-        }
     }
 }
 

@@ -27,5 +27,11 @@
         <item>Gallon</item>
     </string-array>
 
+    <string-array name="recipe_type">
+        <item>Not selected</item>
+        <item>Drink</item>
+        <item>Food</item>
+    </string-array>
+
 </resources>
 <!--    enum class MeasurementType{TABLESPOON,TEASPOON,CUP,OUNCE,POUND,MILLILITER,LITER,UNIT,PINT,QUART,GALLON,DASH,PINCH}-->
