@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
@@ -15,8 +13,6 @@ import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
 import com.barryalan.kitchenmanager13.util.communication.OnClickListener
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
-import com.barryalan.kitchenmanager13.viewmodel.BaseViewModel
-import com.barryalan.kitchenmanager13.viewmodel.IngredientListViewModel
 import kotlinx.android.synthetic.main.item_ingredient_with_recipes.view.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -96,8 +92,8 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val charSearch = constraint.toString()
-                if (charSearch.isEmpty()) {
-                    filteredIngredientList = ingredientList
+                filteredIngredientList = if (charSearch.isEmpty()) {
+                    ingredientList
                 } else {
                     val resultList = ArrayList<IngredientWithRecipes>()
                     for (ingredient in ingredientList) {
@@ -105,7 +101,7 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
                             resultList.add(ingredient)
                         }
                     }
-                    filteredIngredientList = resultList
+                    resultList
                 }
                 val filterResults = FilterResults()
                 filterResults.values = filteredIngredientList

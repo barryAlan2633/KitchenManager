@@ -126,11 +126,11 @@ class IngredientListFragment : BaseFragment(),OnClickListener {
     }
 
     //onClick for deleting ingredients that belong to zero recipes
-    override fun onClick(ingredientID:Long) {
+    override fun onClick(ID:Long) {
         val callback: AreYouSureCallBack = object :
             AreYouSureCallBack {
             override fun proceed() {
-                viewModel.deleteIngredient(ingredientID)
+                viewModel.deleteIngredient(ID)
                 viewModel.refresh()
             }
 

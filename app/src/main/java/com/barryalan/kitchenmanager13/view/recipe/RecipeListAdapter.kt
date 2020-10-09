@@ -37,7 +37,7 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
         recipeList.clear()
 
         //add the addNewRecipe card
-        recipeList.add(Recipe("Add New Recipe",null))
+        recipeList.add(Recipe("Add New Recipe",null,"Food"))
 
         //add the rest of the recipes
         recipeList.addAll(newRecipeList)

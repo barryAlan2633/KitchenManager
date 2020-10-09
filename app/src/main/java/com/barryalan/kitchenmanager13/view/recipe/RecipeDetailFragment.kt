@@ -136,6 +136,7 @@ class RecipeDetailFragment : BaseFragment() {
             Observer { recipeWithIngredients ->
                 recipeWithIngredients?.let {
                     tv_recipeName.text = it.recipe.name.capitalize(Locale.ROOT)
+                    tv_recipeType.text = it.recipe.type
                     it.recipe.image?.let { imageURI ->
                         img_recipe.loadCircleImage(
                             Uri.parse(imageURI),
