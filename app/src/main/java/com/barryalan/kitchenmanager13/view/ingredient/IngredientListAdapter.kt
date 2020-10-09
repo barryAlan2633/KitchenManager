@@ -8,6 +8,8 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +25,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
-    RecyclerView.Adapter<IngredientListAdapter.IngredientViewHolder>() {
+    RecyclerView.Adapter<IngredientListAdapter.IngredientViewHolder>(), Filterable {
 
+    private var filteredIngredientList = ingredientList
     private var mRemovedPosition: Int = 0
     private var mRemovedIngredient: Ingredient? = null
     private var mRemovedIngredientAmount: Amount? = null
@@ -61,7 +64,7 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
         )
     }
 
-    override fun getItemCount() = ingredientList.size
+    override fun getItemCount() = filteredIngredientList.size
 
     @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
@@ -136,4 +139,34 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
 
     class IngredientViewHolder(var view: View) : RecyclerView.ViewHolder(view)
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                filteredIngredientList = if (charSearch.isEmpty()) {
+                    ingredientList
+                } else {
+                    val resultList = ArrayList<Ingredient>()
+                    for (ingredient in ingredientList) {
+                        if (ingredient.name.toLowerCase(Locale.ROOT)
+                                .contains(charSearch.toLowerCase(Locale.ROOT))
+                        ) {
+                            resultList.add(ingredient)
+                        }
+                    }
+                    resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filteredIngredientList
+                return filterResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredIngredientList = results?.values as ArrayList<Ingredient>
+                notifyDataSetChanged()
+            }
+        }
+    }
 }

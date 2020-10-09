@@ -1,22 +1,28 @@
 package com.barryalan.kitchenmanager13.view.ingredient
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryalan.kitchenmanager13.R
-import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
+import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
+import com.barryalan.kitchenmanager13.util.communication.OnClickListener
+import com.barryalan.kitchenmanager13.util.communication.UIMessage
+import com.barryalan.kitchenmanager13.util.communication.UIMessageType
+import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.viewmodel.IngredientListViewModel
 import kotlinx.android.synthetic.main.fragment_ingredient_list.*
 
-class IngredientListFragment : Fragment() {
+class IngredientListFragment : BaseFragment(),OnClickListener {
 
     private lateinit var ingredientListAdapter:IngredientWithRecipesListAdapter
     private lateinit var viewModel: IngredientListViewModel
@@ -55,11 +61,32 @@ class IngredientListFragment : Fragment() {
     private fun initRecyclerView() {
         rv_ingredientList.apply {
             layoutManager = GridLayoutManager(context, 3)
-            ingredientListAdapter = IngredientWithRecipesListAdapter(ArrayList(),viewModel)
-            ingredientListAdapter.setViewModel(viewModel)
+            ingredientListAdapter = IngredientWithRecipesListAdapter(ArrayList(),this@IngredientListFragment)
             adapter = ingredientListAdapter
 
+
         }
+
+        ingredient_with_recipes_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                ingredientListAdapter.filter.filter(newText)
+                return false
+            }
+
+        })
+        val searchIcon = ingredient_with_recipes_search.findViewById<ImageView>(R.id.search_mag_icon)
+        searchIcon.setColorFilter(Color.WHITE)
+
+        val cancelIcon = ingredient_with_recipes_search.findViewById<ImageView>(R.id.search_close_btn)
+        cancelIcon.setColorFilter(Color.WHITE)
+
+        val textView = ingredient_with_recipes_search.findViewById<TextView>(R.id.search_src_text)
+        textView.setTextColor(Color.WHITE)
+
     }
 
     private fun initRefreshLayout() {
@@ -96,5 +123,29 @@ class IngredientListFragment : Fragment() {
                 } else loadingView.visibility = View.GONE
             }
         })
+    }
+
+    //onClick for deleting ingredients that belong to zero recipes
+    override fun onClick(ingredientID:Long) {
+        val callback: AreYouSureCallBack = object :
+            AreYouSureCallBack {
+            override fun proceed() {
+                viewModel.deleteIngredient(ingredientID)
+                viewModel.refresh()
+            }
+
+            override fun cancel() {
+                //Do nothing
+            }
+        }
+
+        uiCommunicationListener.onUIMessageReceived(
+            UIMessage(
+                "Are you sure you wish to delete this ingredient? This action cannot be un-done",
+                UIMessageType.AreYouSureDialog(callback)
+            )
+        )
+
+
     }
 }

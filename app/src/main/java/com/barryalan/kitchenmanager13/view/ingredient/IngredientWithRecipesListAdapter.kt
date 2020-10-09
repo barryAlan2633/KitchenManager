@@ -4,12 +4,15 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
+import com.barryalan.kitchenmanager13.util.communication.OnClickListener
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.viewmodel.BaseViewModel
@@ -18,8 +21,11 @@ import kotlinx.android.synthetic.main.item_ingredient_with_recipes.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<IngredientWithRecipes>,private var viewModel:IngredientListViewModel) :
-    RecyclerView.Adapter<IngredientWithRecipesListAdapter.IngredientWithRecipesViewHolder>() {
+class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<IngredientWithRecipes>,private val clickListener:OnClickListener) :
+    RecyclerView.Adapter<IngredientWithRecipesListAdapter.IngredientWithRecipesViewHolder>() ,
+    Filterable {
+
+    private var filteredIngredientList = ingredientList
     private var thisRecyclerView: RecyclerView? = null
 
     fun updateIngredientList(newIngredientList: List<IngredientWithRecipes>) {
@@ -40,33 +46,29 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
         )
     }
 
-    override fun getItemCount() = ingredientList.size
+    override fun getItemCount() = filteredIngredientList.size
 
     @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: IngredientWithRecipesViewHolder, position: Int) {
         holder.view.tv_ingredientWRName.text =
-            ingredientList[position].ingredient.name.capitalize(Locale.ROOT)
-        holder.view.tv_amountOfRecipes.text = ingredientList[position].recipes.size.toString()
+            filteredIngredientList[position].ingredient.name.capitalize(Locale.ROOT)
+        holder.view.tv_amountOfRecipes.text = filteredIngredientList[position].recipes.size.toString()
 
-        if (ingredientList[position].recipes.isEmpty()) {
+        if (filteredIngredientList[position].recipes.isEmpty()) {
 
             holder.view.ab_deleteIngredient.apply {
                 show()
                 setOnClickListener {
-                    //TODO move this to fragment and ask permission with dialog before deleting
-
-                    viewModel.deleteIngredient(ingredientList[position].ingredient.ID)
-                    ingredientList.remove(ingredientList[position])
-                    notifyItemRemoved(position)
+                    clickListener.onClick(filteredIngredientList[position].ingredient.ID)
                 }
             }
         } else {
             holder.view.ab_deleteIngredient.hide()
         }
 
-        ingredientList[position].ingredient.image?.let {
+        filteredIngredientList[position].ingredient.image?.let {
             holder.view.img_ingredientWR.loadCircleImage(
-                Uri.parse(ingredientList[position].ingredient.image),
+                Uri.parse(filteredIngredientList[position].ingredient.image),
                 getProgressDrawable(holder.view.context)
             )
         }
@@ -76,7 +78,7 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
             val action =
                 IngredientListFragmentDirections.actionIngredientListFragmentToIngredientDetailFragment()
 
-            action.ingredientUID = ingredientList[holder.adapterPosition].ingredient.ID
+            action.ingredientUID = filteredIngredientList[holder.adapterPosition].ingredient.ID
             Navigation.findNavController(holder.view).navigate(action)
 
         }
@@ -88,9 +90,34 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
         thisRecyclerView = recyclerView
     }
 
-    fun setViewModel(viewModel: IngredientListViewModel) {
-        this.viewModel = viewModel
-    }
-
     class IngredientWithRecipesViewHolder(var view: View) : RecyclerView.ViewHolder(view)
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    filteredIngredientList = ingredientList
+                } else {
+                    val resultList = ArrayList<IngredientWithRecipes>()
+                    for (ingredient in ingredientList) {
+                        if (ingredient.ingredient.name.toLowerCase(Locale.ROOT).contains(charSearch.toLowerCase(Locale.ROOT))) {
+                            resultList.add(ingredient)
+                        }
+                    }
+                    filteredIngredientList = resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filteredIngredientList
+                return filterResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredIngredientList = results?.values as ArrayList<IngredientWithRecipes>
+                notifyDataSetChanged()
+            }
+
+        }
+    }
 }

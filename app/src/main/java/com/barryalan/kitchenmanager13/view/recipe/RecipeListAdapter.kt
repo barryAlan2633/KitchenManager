@@ -4,6 +4,8 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
@@ -14,10 +16,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
-    RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder>() {
+    RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder>(), Filterable {
 
     private val TAG: String = "AppDebug"
 
+    private var filteredRecipeList = recipeList
     var removedPosition: Int = 0
     private var removedRecipe: Recipe? = null
     private var thisRecyclerView: RecyclerView? = null
@@ -49,13 +52,13 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
         )
     }
 
-    override fun getItemCount() = recipeList.size
+    override fun getItemCount() = filteredRecipeList.size
 
     @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        holder.view.tv_recipeName.text = recipeList[position].name.capitalize(Locale.ROOT)
+        holder.view.tv_recipeName.text = filteredRecipeList[position].name.capitalize(Locale.ROOT)
 
-        recipeList[position].image?.let {
+        filteredRecipeList[position].image?.let {
             holder.view.img_recipe.loadCircleImage(
                 Uri.parse(it),
                 getProgressDrawable(holder.view.context)
@@ -63,18 +66,18 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
         }
 
         //If this is the AddNewRecipe card
-        if(recipeList[position].ID == 0L){
+        if(filteredRecipeList[position].ID == 0L){
             holder.view.img_recipe.setImageDrawable(holder.view.context.resources.getDrawable(R.drawable.ic_add_black_24dp,null))
 
         }
         holder.view.setOnClickListener {
             //if the id has not been initialized aka you pressed the AddNewRecipe card
-            if(recipeList[holder.adapterPosition].ID == 0L){
+            if(filteredRecipeList[holder.adapterPosition].ID == 0L){
                 Navigation.findNavController(holder.view).navigate(RecipeListFragmentDirections.actionRecipeListFragmentToNewEditFragment())
 
             }else{
                 val action = RecipeListFragmentDirections.actionRecipeListFragmentToDetailFragment()
-                action.recipeUID = recipeList[holder.adapterPosition].ID
+                action.recipeUID = filteredRecipeList[holder.adapterPosition].ID
                 Navigation.findNavController(holder.view).navigate(action)
             }
         }
@@ -98,5 +101,34 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
     }
 
     class RecipeViewHolder(var view: View) : RecyclerView.ViewHolder(view)
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                filteredRecipeList = if (charSearch.isEmpty()) {
+                    recipeList
+                } else {
+                    val resultList = ArrayList<Recipe>()
+                    for (recipe in recipeList) {
+                        if (recipe.name.toLowerCase(Locale.ROOT).contains(charSearch.toLowerCase(Locale.ROOT))) {
+                            resultList.add(recipe)
+                        }
+                    }
+                    resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filteredRecipeList
+                return filterResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredRecipeList = results?.values as ArrayList<Recipe>
+                notifyDataSetChanged()
+            }
+
+        }
+    }
 
 }

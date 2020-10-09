@@ -1,13 +1,17 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -25,6 +29,7 @@ import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.viewmodel.RecipeDetailViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_detail.*
 import kotlinx.android.synthetic.main.fragment_recipe_detail.ab_editRecipe
+import kotlinx.android.synthetic.main.fragment_recipe_list.*
 import java.util.*
 
 class RecipeDetailFragment : BaseFragment() {
@@ -102,6 +107,26 @@ class RecipeDetailFragment : BaseFragment() {
             layoutManager = GridLayoutManager(context, 3)
             adapter = ingredientListAdapter
         }
+
+        ingredient_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                ingredientListAdapter.filter.filter(newText)
+                return false
+            }
+
+        })
+        val searchIcon = ingredient_search.findViewById<ImageView>(R.id.search_mag_icon)
+        searchIcon.setColorFilter(Color.BLACK)
+
+        val cancelIcon = ingredient_search.findViewById<ImageView>(R.id.search_close_btn)
+        cancelIcon.setColorFilter(Color.BLACK)
+
+        val textView = ingredient_search.findViewById<TextView>(R.id.search_src_text)
+        textView.setTextColor(Color.BLACK)
     }
 
     @ExperimentalStdlibApi
