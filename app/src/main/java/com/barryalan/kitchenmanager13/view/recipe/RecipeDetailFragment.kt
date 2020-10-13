@@ -3,7 +3,6 @@ package com.barryalan.kitchenmanager13.view.recipe
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,18 +17,15 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
-import com.barryalan.kitchenmanager13.util.communication.UICommunicationListener
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
-import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
-import com.barryalan.kitchenmanager13.viewmodel.RecipeDetailViewModel
+import com.barryalan.kitchenmanager13.viewmodel.recipe.RecipeDetailViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_detail.*
 import kotlinx.android.synthetic.main.fragment_recipe_detail.ab_editRecipe
-import kotlinx.android.synthetic.main.fragment_recipe_list.*
 import java.util.*
 
 class RecipeDetailFragment : BaseFragment() {

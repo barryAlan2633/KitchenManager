@@ -1,10 +1,11 @@
-package com.barryalan.kitchenmanager13.viewmodel
+package com.barryalan.kitchenmanager13.viewmodel.ingredient
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.barryalan.kitchenmanager13.model.AppDatabase
 import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
+import com.barryalan.kitchenmanager13.viewmodel.shared.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -1,5 +1,5 @@
 package com.barryalan.kitchenmanager13.util.communication
 
-interface OnClickListener {
+interface IngredientOnClickListener {
     fun onClick(ingredientList:Long)
 }

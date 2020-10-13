@@ -2,7 +2,6 @@ package com.barryalan.kitchenmanager13.view.recipe
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,16 +13,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
-import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
-import com.barryalan.kitchenmanager13.util.communication.UIMessage
-import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
-import com.barryalan.kitchenmanager13.viewmodel.RecipeListViewModel
-import kotlinx.android.synthetic.main.fragment_ingredient_list.*
+import com.barryalan.kitchenmanager13.viewmodel.recipe.RecipeListViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_list.*
 import kotlinx.android.synthetic.main.fragment_recipe_list.listError
 import kotlinx.android.synthetic.main.fragment_recipe_list.loadingView

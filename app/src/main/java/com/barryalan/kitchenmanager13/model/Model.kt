@@ -1,6 +1,7 @@
 package com.barryalan.kitchenmanager13.model
 
 import androidx.room.*
+import java.sql.Date
 
 @Entity(indices = [Index(value = ["name"], unique = true)])
 data class Recipe(
@@ -32,7 +33,6 @@ data class Amount(
     @ColumnInfo(name = "amountID")
     var ID: Long = 0
 }
-
 
 @Entity(primaryKeys = ["recipeID", "ingredientID", "amountID"])
 data class RecipeIngredientRef(
@@ -85,5 +85,36 @@ data class IngredientWithRecipes(
     val recipes: List<Recipe>
 )
 
+@Entity(indices = [Index(value = ["date"], unique = true)])
+data class MealPlan(
+    val date: String
+) {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "mealPlanID")
+    var ID: Long = 0
+}
 
+
+@Entity(primaryKeys = ["mealPlanID", "recipeID"])
+data class MealPlanRecipeRef(
+    val mealPlanID: Long,
+    val recipeID: Long
+)
+
+data class MealPlanWithRecipes(
+    @Embedded
+    val mealPlan: MealPlan,
+    @Relation(
+        parentColumn = "mealPlanID",
+        entity = Recipe::class,
+        entityColumn = "recipeID",
+        associateBy = Junction(
+            value = MealPlanRecipeRef::class,
+            parentColumn = "mealPlanID",
+            entityColumn = "recipeID"
+        )
+    )
+    val recipes: List<Recipe>
+
+)
 
