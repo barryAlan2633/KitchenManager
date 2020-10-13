@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -25,6 +26,16 @@ class CalendarFragment : Fragment(), RecipeOnClickListener {
     private var mSelectedDate: String = "0"
     private lateinit var viewModel: MealPlannerCalendarViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This callback will only be called when MyFragment is at least Started.
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            // Handle the back button event
+            Navigation.findNavController(requireView())
+                .navigate(CalendarFragmentDirections.actionCalendarToHomeScreenFragment())
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

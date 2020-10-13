@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -24,6 +25,13 @@ class RecipePickerFragment : BaseFragment() {
     private val recipePickerAdapter = RecipePickerAdapter(arrayListOf())
     private var mSelectedDate: String = "0"
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // This callback will only be called when MyFragment is at least Started.
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            confirmCancel(requireView())
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,26 +52,7 @@ class RecipePickerFragment : BaseFragment() {
         subscribeObservers()
 
         btn_cancelMealSelection.setOnClickListener {
-            val callback: AreYouSureCallBack = object :
-                AreYouSureCallBack {
-                override fun proceed() {
-                    val action =
-                        RecipePickerFragmentDirections.actionRecipePickerFragmentToCalendar()
-                    action.selectedDate = mSelectedDate
-                    Navigation.findNavController(it).navigate(action)
-                }
-
-                override fun cancel() {
-                    //Do nothing
-                }
-            }
-
-            uiCommunicationListener.onUIMessageReceived(
-                UIMessage(
-                    "Are you sure you want to cancel? Any changes will be lost forever!",
-                    UIMessageType.AreYouSureDialog(callback)
-                )
-            )
+            confirmCancel(it)
         }
 
         btn_saveMeals.setOnClickListener {
@@ -82,6 +71,29 @@ class RecipePickerFragment : BaseFragment() {
                 Navigation.findNavController(it).navigate(action)
             }
         }
+    }
+
+    private fun confirmCancel(view: View) {
+        val callback: AreYouSureCallBack = object :
+            AreYouSureCallBack {
+            override fun proceed() {
+                val action =
+                    RecipePickerFragmentDirections.actionRecipePickerFragmentToCalendar()
+                action.selectedDate = mSelectedDate
+                Navigation.findNavController(view).navigate(action)
+            }
+
+            override fun cancel() {
+                //Do nothing
+            }
+        }
+
+        uiCommunicationListener.onUIMessageReceived(
+            UIMessage(
+                "Are you sure you want to cancel? Any changes will be lost forever!",
+                UIMessageType.AreYouSureDialog(callback)
+            )
+        )
     }
 
     private fun initRecyclerView() {
