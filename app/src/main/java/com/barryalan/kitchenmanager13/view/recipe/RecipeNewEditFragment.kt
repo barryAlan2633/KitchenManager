@@ -31,7 +31,7 @@ import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
-import com.barryalan.kitchenmanager13.viewmodel.RecipeNewEditViewModel
+import com.barryalan.kitchenmanager13.viewmodel.recipe.RecipeNewEditViewModel
 import kotlinx.android.synthetic.main.fragment_recipe_new_edit.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

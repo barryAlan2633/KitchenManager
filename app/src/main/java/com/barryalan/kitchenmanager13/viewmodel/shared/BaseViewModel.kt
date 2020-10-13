@@ -1,4 +1,4 @@
-package com.barryalan.kitchenmanager13.viewmodel
+package com.barryalan.kitchenmanager13.viewmodel.shared
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

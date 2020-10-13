@@ -1,4 +1,4 @@
-package com.barryalan.kitchenmanager13.viewmodel
+package com.barryalan.kitchenmanager13.viewmodel.recipe
 
 import android.app.Application
 import android.util.Log
@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.barryalan.kitchenmanager13.model.AppDatabase
 import com.barryalan.kitchenmanager13.model.Ingredient
 import com.barryalan.kitchenmanager13.model.RecipeWithIngredients
+import com.barryalan.kitchenmanager13.viewmodel.shared.BaseViewModel
 import kotlinx.coroutines.*
 
 class RecipeNewEditViewModel(application: Application) : BaseViewModel(application) {

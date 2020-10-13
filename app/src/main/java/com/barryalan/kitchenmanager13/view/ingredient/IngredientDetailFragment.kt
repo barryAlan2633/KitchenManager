@@ -21,7 +21,7 @@ import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
-import com.barryalan.kitchenmanager13.viewmodel.IngredientDetailViewModel
+import com.barryalan.kitchenmanager13.viewmodel.ingredient.IngredientDetailViewModel
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.*
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.btn_cancel
 import kotlinx.android.synthetic.main.fragment_ingredient_detail.et_ingredientNameDetail

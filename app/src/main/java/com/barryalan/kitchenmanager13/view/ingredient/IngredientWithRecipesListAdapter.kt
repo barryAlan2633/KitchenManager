@@ -10,14 +10,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
-import com.barryalan.kitchenmanager13.util.communication.OnClickListener
+import com.barryalan.kitchenmanager13.util.communication.IngredientOnClickListener
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
 import kotlinx.android.synthetic.main.item_ingredient_with_recipes.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<IngredientWithRecipes>,private val clickListener:OnClickListener) :
+class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<IngredientWithRecipes>,private val clickListener:IngredientOnClickListener) :
     RecyclerView.Adapter<IngredientWithRecipesListAdapter.IngredientWithRecipesViewHolder>() ,
     Filterable {
 

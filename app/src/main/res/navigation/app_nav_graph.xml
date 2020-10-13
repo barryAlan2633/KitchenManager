@@ -121,6 +121,11 @@
             app:destination="@id/ingredientListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_homeScreenFragment_to_calendar"
+            app:destination="@id/calendar"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/ingredientDetailFragment"
@@ -143,5 +148,36 @@
             android:name="ingredientUID"
             android:defaultValue="1L"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendar"
+        android:name="com.barryalan.kitchenmanager13.view.mealPlanner.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_calendar_to_homeScreenFragment"
+            app:destination="@id/homeScreenFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_calendar_to_recipePickerFragment"
+            app:destination="@id/recipePickerFragment" />
+        <argument
+            android:name="selectedDate"
+            app:argType="string"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipePickerFragment"
+        android:name="com.barryalan.kitchenmanager13.view.mealPlanner.RecipePickerFragment"
+        android:label="fragment_recipe_picker"
+        tools:layout="@layout/fragment_recipe_picker" >
+        <action
+            android:id="@+id/action_recipePickerFragment_to_calendar"
+            app:destination="@id/calendar" />
+        <argument
+            android:name="selectedDate"
+            app:argType="string"
+            android:defaultValue="0" />
     </fragment>
 </navigation>

@@ -22,6 +22,17 @@ interface RecipeIngredientsRefDao {
     @Query("SELECT * FROM Recipe")
     suspend fun getAllRecipes(): List<Recipe>
 
+    @Transaction
+    suspend fun getAllRecipes(IDs: List<Long>): List<Recipe> {
+        val recipeList: MutableList<Recipe> = mutableListOf()
+
+        for (id in IDs) {
+            recipeList.add(getRecipe(id))
+        }
+
+        return recipeList
+    }
+
     @Delete
     suspend fun deleteRecipe(recipe: Recipe)
 
@@ -29,7 +40,7 @@ interface RecipeIngredientsRefDao {
     suspend fun deleteRecipe(recipeID: Long)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun updateRecipe(recipe: Recipe):Int
+    suspend fun updateRecipe(recipe: Recipe): Int
 
     @Query("DELETE FROM Recipe")
     suspend fun nukeRecipeTable()
@@ -64,7 +75,7 @@ interface RecipeIngredientsRefDao {
     suspend fun nukeIngredientTable()
 
 
-    //AmountDao==================================================================================
+    //AmountDao=====================================================================================
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAmount(amount: Amount): Long
 
@@ -141,7 +152,7 @@ interface RecipeIngredientsRefDao {
         //if the recipe was not inserted properly due to name conflict add a number and
         var count = 2
         val recipeName = recipeWithIngredients.recipe.name
-        while(recipeID == -1L){
+        while (recipeID == -1L) {
             count++
             recipeWithIngredients.recipe.name = recipeName + count
             recipeID = insertRecipe(recipeWithIngredients.recipe)
@@ -225,7 +236,7 @@ interface RecipeIngredientsRefDao {
         //if the recipe was not updated properly due to name conflict add a number and try again
         var count = 2
         val recipeName = updated.recipe.name
-        while(updatedRows == 0){
+        while (updatedRows == 0) {
             count++
             updated.recipe.name = recipeName + count
             updatedRows = updateRecipe(updated.recipe)
@@ -330,5 +341,58 @@ interface RecipeIngredientsRefDao {
     @Transaction
     @Query("SELECT * FROM Ingredient")
     suspend fun getAllIngredientWithRecipes(): List<IngredientWithRecipes>
+
+
+    //Meals ========================================================================================
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMealPlan(mealPlan: MealPlan): Long
+
+    @Transaction
+    suspend fun upsertMealPlan(mealPlan: MealPlan, newRecipeIDs: List<Long>, oldRecipeIDs: List<Long>) {
+        //try to insert mealPlan
+        var mealPlanID: Long = insertMealPlan(mealPlan)
+
+        if (mealPlanID == -1L) { //this is an update because insert conflict returns -1L
+            //get the meal plan id
+            mealPlanID = getMealPlanID(mealPlan.date)
+
+            //add all new mealPlanRecipeRefs
+            for (recipeID in newRecipeIDs) {
+                val newMealRecipeRef = MealPlanRecipeRef(mealPlanID, recipeID)
+                insertMealPlanRecipeRef(newMealRecipeRef)
+            }
+
+            //delete all unselectedRecipeRefs
+            val recipesToDelete = oldRecipeIDs.filter { !newRecipeIDs.contains(it)  }
+
+            for(recipeID in recipesToDelete){
+                deleteMealPlanRecipeRef(MealPlanRecipeRef(mealPlanID,recipeID))
+            }
+
+        } else {//this is an insert
+
+            for (recipeID in newRecipeIDs) {
+                val newMealRecipeRef = MealPlanRecipeRef(mealPlanID, recipeID)
+                val insertSuccess = insertMealPlanRecipeRef(newMealRecipeRef)
+                Log.d("debug", insertSuccess.toString() + newMealRecipeRef.toString())
+            }
+        }
+    }
+
+    @Query("SELECT * FROM MealPlan WHERE date = :date")
+    suspend fun getMealPlan(date: String): MealPlan
+
+    @Query("SELECT mealPlanID FROM MealPlan WHERE date = :date")
+    suspend fun getMealPlanID(date: String): Long
+
+    @Query("SELECT * FROM MealPlan WHERE date = :date")
+    suspend fun getMealPlanWithRecipes(date: String): MealPlanWithRecipes
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMealPlanRecipeRef(mealPlanRecipeRef: MealPlanRecipeRef):Long
+
+    @Delete
+    suspend fun deleteMealPlanRecipeRef(mealPlanRecipeRef: MealPlanRecipeRef)
+
 }
 

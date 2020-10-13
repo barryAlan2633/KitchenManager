@@ -15,14 +15,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
-import com.barryalan.kitchenmanager13.util.communication.OnClickListener
+import com.barryalan.kitchenmanager13.util.communication.IngredientOnClickListener
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
-import com.barryalan.kitchenmanager13.viewmodel.IngredientListViewModel
+import com.barryalan.kitchenmanager13.viewmodel.ingredient.IngredientListViewModel
 import kotlinx.android.synthetic.main.fragment_ingredient_list.*
 
-class IngredientListFragment : BaseFragment(),OnClickListener {
+class IngredientListFragment : BaseFragment(),IngredientOnClickListener {
 
     private lateinit var ingredientListAdapter:IngredientWithRecipesListAdapter
     private lateinit var viewModel: IngredientListViewModel
