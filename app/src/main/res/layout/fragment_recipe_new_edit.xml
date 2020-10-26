@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray">
+    android:background="@color/activity_background">
 
 
     <ImageView
@@ -16,7 +16,7 @@
         android:minWidth="100dp"
         android:minHeight="100dp"
         android:scaleType="fitEnd"
-        android:src="@drawable/ic_error_black_24dp"
+        android:src="@drawable/ic_add_circle_outline_white_24dp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,6 +29,7 @@
         android:layout_gravity="center"
         android:text="Name:"
         android:textAlignment="center"
+        android:textColor="@color/white"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,6 +42,7 @@
         android:layout_gravity="center"
         android:text="Recipe type:"
         android:textAlignment="center"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_recipeName" />
 
@@ -50,8 +52,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
+        android:backgroundTint="@color/white"
+        android:dropDownSelector="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintTop_toTopOf="@+id/textView8"
         tools:listitem="@android:layout/simple_spinner_item" />
 
     <EditText
@@ -63,44 +68,34 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:autofillHints="Recipe name"
+        android:backgroundTint="@color/white"
         android:hint="Recipe name"
         android:inputType="text"
         android:text=""
         android:textAlignment="center"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/img_recipe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_ingredientList"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/btn_updateSaveRecipe"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView4">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_ingredientList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_white"
-            android:paddingTop="20dp"
-            android:paddingBottom="4dp"
-            tools:itemCount="20"
-            tools:listitem="@layout/item_ingredient" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:layout_editor_absoluteX="8dp"
+        tools:listitem="@layout/item_ingredient"
+        tools:orientation="horizontal"
+        tools:itemCount="3"/>
 
     <LinearLayout
         android:id="@+id/ly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/background_white"
         android:orientation="vertical"
@@ -117,8 +112,7 @@
             style="@style/Title4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create a new item:"
-            />
+            android:text="Create a new item:" />
 
         <ImageView
             android:id="@+id/img_newIngredient"
@@ -129,7 +123,7 @@
             android:minWidth="50dp"
             android:minHeight="50dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_error_black_24dp"
+            android:src="@drawable/ic_add_circle_outline_black_24dp"
             android:textAlignment="center" />
 
         <LinearLayout
@@ -173,8 +167,7 @@
             style="@style/Title4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="or select from your ingredient list:"
-            />
+            android:text="or select from your ingredient list:" />
 
         <Spinner
             android:id="@+id/sp_selectIngredient"
@@ -200,14 +193,13 @@
         style="@style/Title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@drawable/background_white"
         android:padding="8dp"
-        android:layout_marginTop="8dp"
         android:text="New Ingredient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sp_newRecipeType" />
-
 
 
     <TextView
@@ -216,10 +208,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@drawable/background_white"
-        android:padding="8dp"
+        android:textColor="@color/white"
         android:text="Ingredients"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ly" />
 

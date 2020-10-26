@@ -4,18 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="118dp"
-    android:layout_height="200dp"
+    android:layout_height="180dp"
     android:layout_margin="4dp"
-    android:background="@drawable/background_white"
+    tools:background="@color/black"
     android:padding="8dp">
 
     <ImageView
         android:id="@+id/img_ingredient"
         android:layout_width="match_parent"
         android:layout_height="125dp"
-        android:layout_weight="2"
-        android:padding="4dp"
-        android:src="@drawable/ic_error_black_24dp"
+        android:src="@drawable/ic_error_outline_white_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,37 +21,45 @@
 
     <TextView
         android:id="@+id/et_ingredientName"
-        style="@style/Title3"
+        style="@style/Title4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_ingredient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_ingredient"
         tools:text="Milk" />
 
 
     <TextView
         android:id="@+id/tv_ingredientAmount"
-        style="@style/Title3"
+        style="@style/Title4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.296"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/tv_ingredientAmountUnit"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_ingredientName"
+        app:layout_constraintTop_toBottomOf="@+id/img_ingredient"
         tools:text="1" />
 
     <TextView
         android:id="@+id/tv_ingredientAmountUnit"
-        style="@style/Title3"
+        style="@style/Title4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/tv_ingredientAmount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tv_ingredientAmount"
         app:layout_constraintTop_toTopOf="@+id/tv_ingredientAmount"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="Unit" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

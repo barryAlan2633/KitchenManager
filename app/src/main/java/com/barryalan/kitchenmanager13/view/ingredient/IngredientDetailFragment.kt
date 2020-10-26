@@ -19,6 +19,7 @@ import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
+import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
 import com.barryalan.kitchenmanager13.viewmodel.ingredient.IngredientDetailViewModel
@@ -42,9 +43,7 @@ class IngredientDetailFragment : BaseFragment() {
             // Handle the back button event
             confirmBackNavigation(requireView())
         }
-
         // The callback can be enabled or disabled here or in the lambda
-
     }
 
 
@@ -146,7 +145,7 @@ class IngredientDetailFragment : BaseFragment() {
                     data?.let { intent ->
                         mIngredientImageURIString = intent.extras?.get("photoURI").toString()
 
-                        img_ingredientDetail.loadCircleImage(
+                        img_ingredientDetail.loadImage(
                             intent.extras?.get("photoURI") as Uri?,
                             getProgressDrawable(requireContext())
                         )
@@ -164,7 +163,7 @@ class IngredientDetailFragment : BaseFragment() {
                 et_ingredientNameDetail.setText(ingredient.name.capitalize(Locale.ROOT))
                 it.image?.let { imageURI ->
                     mIngredientImageURIString = imageURI
-                    img_ingredientDetail.loadCircleImage(
+                    img_ingredientDetail.loadImage(
                         Uri.parse(imageURI),
                         getProgressDrawable(requireContext())
                     )

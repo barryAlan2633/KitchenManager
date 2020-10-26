@@ -4,9 +4,6 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.Recipe
@@ -59,21 +56,26 @@ class MealListAdapter(
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         holder.view.tv_recipeName.text = recipeList[position].name.capitalize(Locale.ROOT)
 
-        recipeList[position].image?.let {
-            holder.view.img_recipe.loadCircleImage(
-                Uri.parse(it),
-                getProgressDrawable(holder.view.context)
-            )
-        }
-
         //If this is the AddNewRecipe card
         if (recipeList[position].ID == 0L) {
             holder.view.img_recipe.setImageDrawable(
                 holder.view.context.resources.getDrawable(
-                    R.drawable.ic_add_black_24dp,
+                    R.drawable.ic_add_circle_outline_white_24dp,
                     null
                 )
             )
+        }else{
+            recipeList[position].image?.let {
+                holder.view.img_recipe.loadImage(
+                    Uri.parse(it),
+                    getProgressDrawable(holder.view.context)
+                )
+            }?: run{
+                holder.view.img_recipe.loadCircleImage(
+                    R.drawable.ic_error_outline_white_24dp,
+                    getProgressDrawable(holder.view.context)
+                )
+            }
         }
 
         holder.view.setOnClickListener {

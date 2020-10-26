@@ -32,6 +32,7 @@ class RecipePickerFragment : BaseFragment() {
             confirmCancel(requireView())
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

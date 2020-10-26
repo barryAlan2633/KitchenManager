@@ -61,7 +61,7 @@ class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
         holder.view.tv_recipeName.text = recipeList[position].name.capitalize(Locale.ROOT)
 
         recipeList[position].image?.let {
-            holder.view.img_recipe.loadCircleImage(
+            holder.view.img_recipe.loadImage(
                 Uri.parse(it),
                 getProgressDrawable(holder.view.context)
             )
@@ -70,7 +70,7 @@ class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
         //if this recipe is already selected
         if (selectedRecipesIDs.contains(recipeList[position].ID)) {
             holder.view.background =
-                ContextCompat.getDrawable(holder.view.context, R.drawable.background_gray)
+                ContextCompat.getDrawable(holder.view.context, R.color.gray)
         }
 
 
@@ -78,11 +78,11 @@ class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
             //if this recipe is already selected
             if (selectedRecipesIDs.contains(recipeList[position].ID)) {
                 holder.view.background =
-                    ContextCompat.getDrawable(holder.view.context, R.drawable.background_white)
+                    ContextCompat.getDrawable(holder.view.context, R.color.black)
                 selectedRecipesIDs.remove(recipeList[position].ID)
             } else {
                 holder.view.background =
-                    ContextCompat.getDrawable(holder.view.context, R.drawable.background_gray)
+                    ContextCompat.getDrawable(holder.view.context, R.color.darkGray)
                 selectedRecipesIDs.add(recipeList[position].ID)
             }
         }

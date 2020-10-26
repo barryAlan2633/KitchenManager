@@ -12,8 +12,8 @@
         <action
             android:id="@+id/action_newEditFragment_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@id/recipeNewEditFragment"
             app:popUpToInclusive="true">
             <argument
@@ -23,10 +23,10 @@
         <action
             android:id="@+id/action_recipeNewEditFragment_to_recipeListFragment"
             app:destination="@id/recipeListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@layout/fragment_home_screen"
-            app:popUpToInclusive="false"/>
+            app:popUpToInclusive="false" />
         <argument
             android:name="recipeUID"
             app:argType="long"
@@ -46,15 +46,15 @@
         <action
             android:id="@+id/action_detailFragment_to_recipeListFragment"
             app:destination="@id/recipeListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@id/recipeListFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_detailFragment_to_newEditFragment"
             app:destination="@id/recipeNewEditFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
 
         <argument
             android:name="recipeUID"
@@ -70,13 +70,13 @@
         <action
             android:id="@+id/action_recipeListFragment_to_newEditFragment"
             app:destination="@id/recipeNewEditFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_recipeListFragment_to_detailFragment"
             app:destination="@id/recipeDetailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim">
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out">
             <argument
                 android:name="recipeID"
                 android:defaultValue="-1" />
@@ -84,8 +84,8 @@
         <action
             android:id="@+id/action_recipeListFragment_to_homeScreenFragment"
             app:destination="@id/homeScreenFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
 
     </fragment>
     <fragment
@@ -96,15 +96,15 @@
         <action
             android:id="@+id/action_ingredientListFragment_to_homeScreenFragment"
             app:destination="@id/homeScreenFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@id/homeScreenFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_ingredientListFragment_to_ingredientDetailFragment"
             app:destination="@id/ingredientDetailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/homeScreenFragment"
@@ -114,18 +114,18 @@
         <action
             android:id="@+id/action_homeScreenFragment_to_recipeListFragment"
             app:destination="@id/recipeListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_homeScreenFragment_to_ingredientListFragment"
             app:destination="@id/ingredientListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_homeScreenFragment_to_calendar"
             app:destination="@id/calendar"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"/>
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/ingredientDetailFragment"
@@ -135,14 +135,14 @@
         <action
             android:id="@+id/action_ingredientDetailFragment_to_ingredientListFragment"
             app:destination="@id/ingredientListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@id/ingredientListFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_ingredientDetailFragment_to_newEditFragment"
             app:destination="@id/recipeNewEditFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
+            app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@anim/nav_default_exit_anim" />
         <argument
             android:name="ingredientUID"
@@ -157,11 +157,13 @@
         <action
             android:id="@+id/action_calendar_to_homeScreenFragment"
             app:destination="@id/homeScreenFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"/>
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_calendar_to_recipePickerFragment"
-            app:destination="@id/recipePickerFragment" />
+            app:destination="@id/recipePickerFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <argument
             android:name="selectedDate"
             app:argType="string"
@@ -174,7 +176,9 @@
         tools:layout="@layout/fragment_recipe_picker" >
         <action
             android:id="@+id/action_recipePickerFragment_to_calendar"
-            app:destination="@id/calendar" />
+            app:destination="@id/calendar"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <argument
             android:name="selectedDate"
             app:argType="string"
