@@ -13,6 +13,7 @@ import com.barryalan.kitchenmanager13.model.IngredientWithRecipes
 import com.barryalan.kitchenmanager13.util.communication.IngredientOnClickListener
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
+import com.barryalan.kitchenmanager13.util.loadImage
 import kotlinx.android.synthetic.main.item_ingredient_with_recipes.view.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -63,8 +64,13 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
         }
 
         filteredIngredientList[position].ingredient.image?.let {
-            holder.view.img_ingredientWR.loadCircleImage(
+            holder.view.img_ingredientWR.loadImage(
                 Uri.parse(filteredIngredientList[position].ingredient.image),
+                getProgressDrawable(holder.view.context)
+            )
+        }?: run{
+            holder.view.img_ingredientWR.loadCircleImage(
+                R.drawable.ic_error_outline_white_24dp,
                 getProgressDrawable(holder.view.context)
             )
         }

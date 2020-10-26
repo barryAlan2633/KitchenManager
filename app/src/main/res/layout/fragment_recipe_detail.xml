@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray">
+    android:background="@color/activity_background">
 
 
     <ImageView
@@ -17,7 +17,7 @@
         android:minWidth="100dp"
         android:minHeight="100dp"
         android:scaleType="fitEnd"
-        android:src="@drawable/ic_error_black_24dp"
+        android:src="@drawable/ic_error_outline_white_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="8dp"
-        android:paddingTop="8dp"
         android:textAlignment="center"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/img_recipe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,13 +41,11 @@
         style="@style/Title4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:paddingTop="8dp"
         android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/img_recipe"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_recipeName"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/img_recipe"
+        app:layout_constraintStart_toStartOf="@+id/img_recipe"
+        app:layout_constraintTop_toBottomOf="@+id/img_recipe"
         tools:text="Food" />
 
 
@@ -77,79 +75,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_recipe">
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_ingredientList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_white"
-            android:paddingStart="4dp"
-            android:paddingTop="50dp"
-            android:paddingEnd="4dp"
-            android:paddingBottom="4dp" />
-
-    </LinearLayout>
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/ingredient_search"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_ingredientList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/background_white"
-        android:textCursorDrawable="@null"
-        app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout4"
-        app:queryBackground="@null" />
-
-    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-    <!--        android:id="@+id/ab_editIngredients"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_margin="8dp"-->
-    <!--        android:backgroundTint="@color/white"-->
-    <!--        android:src="@drawable/ic_edit_black_24dp"-->
-    <!--        app:backgroundTint="@color/black"-->
-    <!--        app:borderWidth="1dp"-->
-    <!--        app:fabSize="mini"-->
-    <!--        app:layout_constraintEnd_toEndOf="@+id/rv_ingredientList"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/rv_ingredientList" />-->
-
+        android:padding="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView2"
         style="@style/Title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_white"
-        android:padding="8dp"
-        android:text="Ingredients"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="20dp"
+        android:text="Ingredients:"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_recipe" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_recipeType" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.55" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

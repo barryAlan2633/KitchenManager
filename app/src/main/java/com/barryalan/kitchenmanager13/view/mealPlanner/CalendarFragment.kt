@@ -62,8 +62,6 @@ class CalendarFragment : Fragment(), RecipeOnClickListener {
             mSelectedDate = "$year/${month + 1}/$day"
             viewModel.refresh(mSelectedDate)
         }
-
-
     }
 
     @SuppressLint("SimpleDateFormat")

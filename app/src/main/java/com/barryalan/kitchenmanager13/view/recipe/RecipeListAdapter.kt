@@ -37,7 +37,7 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
         recipeList.clear()
 
         //add the addNewRecipe card
-        recipeList.add(Recipe("Add New Recipe",null,"Food"))
+        recipeList.add(Recipe("Add New Recipe", null, "Food"))
 
         //add the rest of the recipes
         recipeList.addAll(newRecipeList)
@@ -58,24 +58,37 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         holder.view.tv_recipeName.text = filteredRecipeList[position].name.capitalize(Locale.ROOT)
 
-        filteredRecipeList[position].image?.let {
-            holder.view.img_recipe.loadCircleImage(
-                Uri.parse(it),
-                getProgressDrawable(holder.view.context)
-            )
-        }
 
         //If this is the AddNewRecipe card
-        if(filteredRecipeList[position].ID == 0L){
-            holder.view.img_recipe.setImageDrawable(holder.view.context.resources.getDrawable(R.drawable.ic_add_black_24dp,null))
-
+        if (filteredRecipeList[position].ID == 0L) {
+            holder.view.img_recipe.setImageDrawable(
+                holder.view.context.resources.getDrawable(
+                    R.drawable.ic_add_circle_outline_white_24dp,
+                    null
+                )
+            )
+        }else{
+            filteredRecipeList[position].image?.let {
+                holder.view.img_recipe.loadImage(
+                    Uri.parse(it),
+                    getProgressDrawable(holder.view.context)
+                )
+            }?: run{
+                holder.view.img_recipe.loadCircleImage(
+                    R.drawable.ic_error_outline_white_24dp,
+                    getProgressDrawable(holder.view.context)
+                )
+            }
         }
+
+
         holder.view.setOnClickListener {
             //if the id has not been initialized aka you pressed the AddNewRecipe card
-            if(filteredRecipeList[holder.adapterPosition].ID == 0L){
-                Navigation.findNavController(holder.view).navigate(RecipeListFragmentDirections.actionRecipeListFragmentToNewEditFragment())
+            if (filteredRecipeList[holder.adapterPosition].ID == 0L) {
+                Navigation.findNavController(holder.view)
+                    .navigate(RecipeListFragmentDirections.actionRecipeListFragmentToNewEditFragment())
 
-            }else{
+            } else {
                 val action = RecipeListFragmentDirections.actionRecipeListFragmentToDetailFragment()
                 action.recipeUID = filteredRecipeList[holder.adapterPosition].ID
                 Navigation.findNavController(holder.view).navigate(action)
@@ -111,7 +124,9 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
                 } else {
                     val resultList = ArrayList<Recipe>()
                     for (recipe in recipeList) {
-                        if (recipe.name.toLowerCase(Locale.ROOT).contains(charSearch.toLowerCase(Locale.ROOT))) {
+                        if (recipe.name.toLowerCase(Locale.ROOT)
+                                .contains(charSearch.toLowerCase(Locale.ROOT))
+                        ) {
                             resultList.add(recipe)
                         }
                     }

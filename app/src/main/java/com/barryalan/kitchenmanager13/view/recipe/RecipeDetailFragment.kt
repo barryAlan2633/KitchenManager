@@ -15,12 +15,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
+import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.viewmodel.recipe.RecipeDetailViewModel
@@ -100,29 +102,9 @@ class RecipeDetailFragment : BaseFragment() {
 
     private fun initRecyclerView() {
         rv_ingredientList.apply {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             adapter = ingredientListAdapter
         }
-
-        ingredient_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                ingredientListAdapter.filter.filter(newText)
-                return false
-            }
-
-        })
-        val searchIcon = ingredient_search.findViewById<ImageView>(R.id.search_mag_icon)
-        searchIcon.setColorFilter(Color.BLACK)
-
-        val cancelIcon = ingredient_search.findViewById<ImageView>(R.id.search_close_btn)
-        cancelIcon.setColorFilter(Color.BLACK)
-
-        val textView = ingredient_search.findViewById<TextView>(R.id.search_src_text)
-        textView.setTextColor(Color.BLACK)
     }
 
     @ExperimentalStdlibApi
@@ -134,7 +116,7 @@ class RecipeDetailFragment : BaseFragment() {
                     tv_recipeName.text = it.recipe.name.capitalize(Locale.ROOT)
                     tv_recipeType.text = it.recipe.type
                     it.recipe.image?.let { imageURI ->
-                        img_recipe.loadCircleImage(
+                        img_recipe.loadImage(
                             Uri.parse(imageURI),
                             getProgressDrawable(requireContext())
                         )

@@ -1,16 +1,11 @@
 package com.barryalan.kitchenmanager13.view.ingredient
 
 import android.net.Uri
-import android.opengl.Visibility
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
@@ -18,9 +13,9 @@ import com.barryalan.kitchenmanager13.model.Amount
 import com.barryalan.kitchenmanager13.model.Ingredient
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
+import com.barryalan.kitchenmanager13.util.loadImage
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.item_ingredient.view.*
-import kotlinx.android.synthetic.main.item_ingredient_with_recipes.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -44,7 +39,6 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
         amounts.clear()
         amounts.addAll(newAmounts)
-        Log.d("debug", amounts.toString())
 
         notifyDataSetChanged()
     }
@@ -68,17 +62,23 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
     @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
-        holder.view.et_ingredientName.text = ingredientList[position].name.capitalize(Locale.ROOT)
+        holder.view.et_ingredientName.text = filteredIngredientList[position].name.capitalize(Locale.ROOT)
 
         if (amounts.isNotEmpty()) {
+            //todo these amounts are wrong they should correspond to the filtered list not the regular list
             holder.view.tv_ingredientAmount.text = amounts[position].amount.toString()
             holder.view.tv_ingredientAmountUnit.text = amounts[position].unit
         }
 
 
-        ingredientList[position].image?.let {
+        filteredIngredientList[position].image?.let {
+            holder.view.img_ingredient.loadImage(
+                Uri.parse(it),
+                getProgressDrawable(holder.view.context)
+            )
+        }?: run{
             holder.view.img_ingredient.loadCircleImage(
-                Uri.parse(ingredientList[position].image),
+                R.drawable.ic_error_outline_white_24dp,
                 getProgressDrawable(holder.view.context)
             )
         }
@@ -155,6 +155,7 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
                             resultList.add(ingredient)
                         }
                     }
+
                     resultList
                 }
                 val filterResults = FilterResults()

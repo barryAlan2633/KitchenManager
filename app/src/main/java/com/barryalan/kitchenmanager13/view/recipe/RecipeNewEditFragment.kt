@@ -15,8 +15,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.Amount
@@ -28,6 +28,7 @@ import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
 import com.barryalan.kitchenmanager13.util.loadCircleImage
+import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
 import com.barryalan.kitchenmanager13.view.shared.CameraActivity
@@ -123,7 +124,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     //clear fields
                     et_newIngredientName.text.clear()
                     et_newIngredientAmount.text.clear()
-                    img_newIngredient.setImageResource(R.drawable.ic_error_black_24dp)
+                    img_newIngredient.setImageResource(R.drawable.ic_error_outline_white_24dp)
                     mIngredientImageURIString = null
                 }
             }
@@ -176,7 +177,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
 
     private fun initRecyclerView() {
         rv_ingredientList.apply {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
             adapter = ingredientListAdapter
         }
 
@@ -203,7 +204,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.recipe_type,
-            android.R.layout.simple_spinner_item
+            R.layout.item_spinner
         ).also { adapter ->
 
             // Specify the layout to use when the list of choices appears
@@ -319,7 +320,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     data?.let { intent ->
                         mRecipeImageURIString = intent.extras?.get("photoURI").toString()
 
-                        img_recipe.loadCircleImage(
+                        img_recipe.loadImage(
                             intent.extras?.get("photoURI") as Uri?,
                             getProgressDrawable(requireContext())
                         )
@@ -330,7 +331,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     data?.let { intent ->
                         mIngredientImageURIString = intent.extras?.get("photoURI").toString()
 
-                        img_newIngredient.loadCircleImage(
+                        img_newIngredient.loadImage(
                             intent.extras?.get("photoURI") as Uri?,
                             getProgressDrawable(requireContext())
                         )
@@ -400,7 +401,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     //-1 is the offset for the "nothing selected" option
                     et_newIngredientName.setText(mIngredientList[position - 1].name)
                     mIngredientImageURIString = mIngredientList[position - 1].image
-                    img_newIngredient.loadCircleImage(
+                    img_newIngredient.loadImage(
                         Uri.parse(mIngredientImageURIString),
                         getProgressDrawable(requireContext())
                     )
@@ -430,7 +431,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     }
 
                     recipeWithIngredients.recipe.image?.let {
-                        img_recipe.loadCircleImage(
+                        img_recipe.loadImage(
                             Uri.parse(it),
                             getProgressDrawable(requireContext())
                         )

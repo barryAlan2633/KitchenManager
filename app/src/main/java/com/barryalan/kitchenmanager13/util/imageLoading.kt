@@ -12,7 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 fun ImageView.loadCircleImage(uri: Uri?, progressDrawable: CircularProgressDrawable) {
     val options = RequestOptions()
         .placeholder(progressDrawable)
-        .error(R.drawable.ic_error_black_24dp)
+        .error(R.drawable.ic_error_outline_white_24dp)
     Glide.with(context)
         .setDefaultRequestOptions(options)
         .load(uri)
@@ -20,10 +20,21 @@ fun ImageView.loadCircleImage(uri: Uri?, progressDrawable: CircularProgressDrawa
         .into(this)
 }
 
+fun ImageView.loadCircleImage(drawable: Int?, progressDrawable: CircularProgressDrawable) {
+    val options = RequestOptions()
+        .placeholder(progressDrawable)
+        .error(R.drawable.ic_error_outline_white_24dp)
+    Glide.with(context)
+        .setDefaultRequestOptions(options)
+        .load(drawable)
+        .circleCrop()
+        .into(this)
+}
+
 fun ImageView.loadImage(uri: Uri?, progressDrawable: CircularProgressDrawable) {
     val options = RequestOptions()
         .placeholder(progressDrawable)
-        .error(R.drawable.ic_error_black_24dp)
+        .error(R.drawable.ic_error_outline_white_24dp)
     Glide.with(context)
         .setDefaultRequestOptions(options)
         .load(uri)
