@@ -2,6 +2,7 @@ package com.barryalan.kitchenmanager13.model
 
 import android.util.Log
 import androidx.room.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Dao
@@ -103,6 +104,9 @@ interface RecipeIngredientsRefDao {
     //ReferenceDao==================================================================================
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRecipeIngredientRef(recipeIngredientRef: RecipeIngredientRef): Long
+
+    @Query("SELECT * FROM RecipeIngredientRef WHERE recipeID = :recipeID")
+    suspend fun getRecipeIngredientRef(recipeID: Long): List<RecipeIngredientRef>?
 
     @Query("DELETE FROM RecipeIngredientRef WHERE recipeID = :recipeID")
     suspend fun deleteAllRecipeIngredientRef(recipeID: Long)
@@ -290,7 +294,7 @@ interface RecipeIngredientsRefDao {
                 RecipeIngredientRef(
                     toUpdate.recipe.ID,
                     finalIngredientsIDs[count],
-                    amountsIDs[count]
+                     amountsIDs[count]
                 )
 
             insertRecipeIngredientRef(reference)
@@ -348,31 +352,40 @@ interface RecipeIngredientsRefDao {
     suspend fun insertMealPlan(mealPlan: MealPlan): Long
 
     @Transaction
-    suspend fun upsertMealPlan(mealPlan: MealPlan, newRecipeIDs: List<Long>, oldRecipeIDs: List<Long>) {
+    suspend fun upsertMealPlan(
+        mealPlan: MealPlan,
+        newRecipeIDs: List<Long>,
+        oldRecipeIDs: List<Long>
+    ) {
         //try to insert mealPlan
         var mealPlanID: Long = insertMealPlan(mealPlan)
+
+
+        //TODO dummy amount object
+        val mealAmountId = insertMealAmount(MealAmount(1))
+        //todo if this amount object already exists grab its id from the db and pass that instead to the three places
 
         if (mealPlanID == -1L) { //this is an update because insert conflict returns -1L
             //get the meal plan id
             mealPlanID = getMealPlanID(mealPlan.date)
 
             //add all new mealPlanRecipeRefs
-            for (recipeID in newRecipeIDs) {
-                val newMealRecipeRef = MealPlanRecipeRef(mealPlanID, recipeID)
+            for (recipeID in newRecipeIDs) {//todo there is three 0s
+                val newMealRecipeRef = MealPlanRecipeRef(mealPlanID, recipeID, 1)
                 insertMealPlanRecipeRef(newMealRecipeRef)
             }
 
             //delete all unselectedRecipeRefs
-            val recipesToDelete = oldRecipeIDs.filter { !newRecipeIDs.contains(it)  }
+            val recipesToDelete = oldRecipeIDs.filter { !newRecipeIDs.contains(it) }
 
-            for(recipeID in recipesToDelete){
-                deleteMealPlanRecipeRef(MealPlanRecipeRef(mealPlanID,recipeID))
+            for (recipeID in recipesToDelete) {
+                deleteMealPlanRecipeRef(MealPlanRecipeRef(mealPlanID, recipeID, 1))
             }
 
         } else {//this is an insert
 
             for (recipeID in newRecipeIDs) {
-                val newMealRecipeRef = MealPlanRecipeRef(mealPlanID, recipeID)
+                val newMealRecipeRef = MealPlanRecipeRef(mealPlanID, recipeID, 1)
                 val insertSuccess = insertMealPlanRecipeRef(newMealRecipeRef)
                 Log.d("debug", insertSuccess.toString() + newMealRecipeRef.toString())
             }
@@ -389,10 +402,102 @@ interface RecipeIngredientsRefDao {
     suspend fun getMealPlanWithRecipes(date: String): MealPlanWithRecipes
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertMealPlanRecipeRef(mealPlanRecipeRef: MealPlanRecipeRef):Long
+    suspend fun insertMealPlanRecipeRef(mealPlanRecipeRef: MealPlanRecipeRef): Long
 
     @Delete
     suspend fun deleteMealPlanRecipeRef(mealPlanRecipeRef: MealPlanRecipeRef)
 
+    //Meal amounts =================================================================================
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMealAmount(amount: MealAmount): Long
+
+    @Query("UPDATE MealAmount SET amount=:amount WHERE mealAmountID = :amountID")
+    suspend fun updateMealAmount(amount: Int, amountID: Long)
+
+
+    @Transaction
+    suspend fun getGroceryList(startDate: Long, endDate: Long): List<Ingredient> {
+        //1) DAO queries mealPlans for the selected dates
+        //2) Use mealplans IDs to get recipesIDS
+        //3) Use recipesIDS to get recipeIngredientRefs
+        //4) Use recipeIngredientRefs to get ingredientIDs
+        //5) Use ingredientIDs to get ingredients
+        //6) Return list of ingredients to vm
+
+        //1) DAO queries mealPlans for the selected dates
+        val sdfDB = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+
+        var sd = startDate
+        val mealPlansWR: MutableList<MealPlanWithRecipes> = mutableListOf()
+        while (sd <= endDate) {
+            val mealPlanWithRecipes: MealPlanWithRecipes? = getMealPlanWithRecipes(sdfDB.format(Date(sd)))
+
+            Log.d("debug","startDate = ${sdfDB.format(Date(sd))}, endDate = ${sdfDB.format(Date(endDate))}, $mealPlanWithRecipes ")
+
+            //need to block the thread until the query above is completed otherwise it will run this without the right info
+            mealPlanWithRecipes?.let {
+                mealPlansWR.add(mealPlanWithRecipes)
+                Log.d("debug","added mealplan from ${mealPlanWithRecipes.mealPlan.date}")
+
+            }
+            sd += 24 * 60 * 60 * 1000
+        }
+
+        //2) Use meal plans IDs to get recipesIDS
+        if (mealPlansWR.isNotEmpty()) {
+            val recipesIDsFromMealPlans = mutableListOf<Long>()
+
+            for (mealPlan in mealPlansWR) {
+                mealPlan.recipes.map { recipe -> recipesIDsFromMealPlans.add(recipe.ID) }
+                Log.d("debug","recipesIDs $recipesIDsFromMealPlans")
+
+            }
+
+            //3) Use recipesIDS to get recipeIngredientRefs
+            if (recipesIDsFromMealPlans.isNotEmpty()) {
+
+                val ingredientIDsFromRecipes = mutableListOf<Long>()
+                for (recipeID in recipesIDsFromMealPlans) {
+                    val recipeIngredientRef: List<RecipeIngredientRef>? = getRecipeIngredientRef(recipeID)
+
+                    //4) Use recipeIngredientRefs to get ingredientIDs
+                    recipeIngredientRef?.map {
+                        ingredientIDsFromRecipes.add(it.ingredientID)
+                    }
+                }
+
+                Log.d("debug","IngredientsIDs $ingredientIDsFromRecipes")
+
+
+                //get all ingredient objects from the ingredient IDs
+                if (ingredientIDsFromRecipes.isNotEmpty()) {
+                    val allUserIngredients: List<Ingredient>? = getAllIngredients()
+                    Log.d("debug","All ingredients $allUserIngredients")
+
+                    allUserIngredients?.let { ingredientInAll ->
+
+                        val groceryList: MutableList<Ingredient> = mutableListOf()
+
+                        ingredientInAll.map {
+                            if (ingredientIDsFromRecipes.contains(it.ID)) {
+                                groceryList.add(it)
+                            }
+                        }
+                        Log.d("debug","Grocery List $groceryList")
+
+                        return groceryList
+
+                    } ?: run {
+                        return mutableListOf()
+                    }
+                }
+            }
+
+        } else {
+            return mutableListOf()
+        }
+
+        return mutableListOf()
+    }
 }
 

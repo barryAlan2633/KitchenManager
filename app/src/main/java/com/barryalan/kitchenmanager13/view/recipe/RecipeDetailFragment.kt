@@ -1,27 +1,21 @@
 package com.barryalan.kitchenmanager13.view.recipe
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
-import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
@@ -116,7 +110,7 @@ class RecipeDetailFragment : BaseFragment() {
                     tv_recipeName.text = it.recipe.name.capitalize(Locale.ROOT)
                     tv_recipeType.text = it.recipe.type
                     it.recipe.image?.let { imageURI ->
-                        img_recipe.loadImage(
+                        img_meal.loadImage(
                             Uri.parse(imageURI),
                             getProgressDrawable(requireContext())
                         )

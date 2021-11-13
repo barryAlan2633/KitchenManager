@@ -34,6 +34,10 @@ class HomeScreenFragment : Fragment() {
         btnMealPlanner.setOnClickListener {
             Navigation.findNavController(it).navigate(HomeScreenFragmentDirections.actionHomeScreenFragmentToCalendar())
         }
+
+        btnGroceries.setOnClickListener {
+            Navigation.findNavController(it).navigate(HomeScreenFragmentDirections.actionHomeScreenFragmentToGroceriesCalendar())
+        }
     }
 
 

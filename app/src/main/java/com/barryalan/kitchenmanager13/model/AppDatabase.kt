@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    version = 7, entities = [
+    version = 1, entities = [
         Recipe::class,
         Ingredient::class,
         Amount::class,
+        MealAmount::class,
         MealPlan::class,
         RecipeIngredientRef::class,
         MealPlanRecipeRef::class
@@ -25,9 +26,9 @@ abstract class AppDatabase() : RoomDatabase() {
         private var LOCK = Any()
 
         operator fun invoke(context: Context) = INSTANCE ?: synchronized(LOCK) {
-                INSTANCE ?: buildDatabase(context).also {
-                    INSTANCE = it
-                }
+            INSTANCE ?: buildDatabase(context).also {
+                INSTANCE = it
+            }
         }
 
         private fun buildDatabase(context: Context): AppDatabase =

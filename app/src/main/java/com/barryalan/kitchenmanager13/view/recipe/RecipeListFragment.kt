@@ -45,7 +45,9 @@ class RecipeListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProviders.of(this).get(RecipeListViewModel::class.java)
+
         viewModel.refresh()
         initRecyclerView()
         initRefreshLayout()

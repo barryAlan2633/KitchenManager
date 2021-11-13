@@ -62,7 +62,8 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
 
     @ExperimentalStdlibApi
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
-        holder.view.et_ingredientName.text = filteredIngredientList[position].name.capitalize(Locale.ROOT)
+        holder.view.et_ingredientName.text =
+            filteredIngredientList[position].name.capitalize(Locale.ROOT)
 
         if (amounts.isNotEmpty()) {
             //todo these amounts are wrong they should correspond to the filtered list not the regular list
@@ -76,11 +77,8 @@ class IngredientListAdapter(private val ingredientList: ArrayList<Ingredient>) :
                 Uri.parse(it),
                 getProgressDrawable(holder.view.context)
             )
-        }?: run{
-            holder.view.img_ingredient.loadCircleImage(
-                R.drawable.ic_error_outline_white_24dp,
-                getProgressDrawable(holder.view.context)
-            )
+        } ?: run{
+            holder.view.img_ingredient.setImageResource(R.drawable.ic_error_outline_white_24dp)
         }
 
         holder.view.setOnClickListener {

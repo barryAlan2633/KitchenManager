@@ -1,8 +1,8 @@
 package com.barryalan.kitchenmanager13.view.shared
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.util.communication.*
 

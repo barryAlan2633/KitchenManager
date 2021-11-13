@@ -2,7 +2,6 @@ package com.barryalan.kitchenmanager13.view.mealPlanner
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +12,19 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.barryalan.kitchenmanager13.R
+import com.barryalan.kitchenmanager13.util.communication.MealOnClickListener
 import com.barryalan.kitchenmanager13.util.communication.RecipeOnClickListener
-import com.barryalan.kitchenmanager13.viewmodel.mealPlanner.MealPlannerCalendarViewModel
-import kotlinx.android.synthetic.main.fragment_calendar.*
+import com.barryalan.kitchenmanager13.viewmodel.mealPlanner.MealPlannerViewModel
+import kotlinx.android.synthetic.main.fragment_meal_planner.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.ExperimentalTime
 
-class CalendarFragment : Fragment(), RecipeOnClickListener {
+class MealPlannerFragment : Fragment(), RecipeOnClickListener, MealOnClickListener {
 
     private lateinit var mealListAdapter: MealListAdapter
     private var mSelectedDate: String = "0"
-    private lateinit var viewModel: MealPlannerCalendarViewModel
+    private lateinit var viewModel: MealPlannerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ class CalendarFragment : Fragment(), RecipeOnClickListener {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle the back button event
             Navigation.findNavController(requireView())
-                .navigate(CalendarFragmentDirections.actionCalendarToHomeScreenFragment())
+                .navigate(MealPlannerFragmentDirections.actionCalendarToHomeScreenFragment())
         }
     }
     override fun onCreateView(
@@ -41,20 +41,20 @@ class CalendarFragment : Fragment(), RecipeOnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar, container, false)
+        return inflater.inflate(R.layout.fragment_meal_planner, container, false)
     }
 
     @SuppressLint("SimpleDateFormat")
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MealPlannerCalendarViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MealPlannerViewModel::class.java)
         initRecyclerView()
         subscribeObservers()
 
         arguments?.let {
             //get date from bundle
-            mSelectedDate = CalendarFragmentArgs.fromBundle(it).selectedDate
+            mSelectedDate = MealPlannerFragmentArgs.fromBundle(it).selectedDate
         }
         setCorrectCalendarDate()
 
@@ -82,34 +82,35 @@ class CalendarFragment : Fragment(), RecipeOnClickListener {
 
     }
 
-    private fun subscribeObservers() {
-        viewModel.mealsLiveData.observe(viewLifecycleOwner, Observer { meals ->
-            meals?.let {
-                mealListAdapter.updateRecipeList(meals)
-            }
-        })
-    }
-
     private fun initRecyclerView() {
         rv_meals.apply {
-            mealListAdapter = MealListAdapter(arrayListOf(), this@CalendarFragment)
+            mealListAdapter = MealListAdapter( arrayListOf(),this@MealPlannerFragment, this@MealPlannerFragment)
             layoutManager = GridLayoutManager(context, 3)
             adapter = mealListAdapter
-            mealListAdapter.updateRecipeList(mutableListOf())
+            mealListAdapter.updateMealPlan(null) //DO NOT ERASE THIS LINE, ALTHOUGH IT LOOKS REDUNDANT, IT SOMEHOW MAKES EVERYTHING WORK
         }
     }
 
     override fun onClick(recipeID: Long) {
         //if the id has not been initialized aka you pressed the AddNewRecipe card
         if (recipeID == 0L) {
-            val action = CalendarFragmentDirections.actionCalendarToRecipePickerFragment()
+            val action = MealPlannerFragmentDirections.actionCalendarToRecipePickerFragment()
             action.selectedDate = mSelectedDate
             Navigation.findNavController(requireView()).navigate(action)
         } else {
-
+            //TODO let me navigate to the recipe detail fragment when i press on a picture
         }
     }
 
+    override fun onClick(amountID: Long, value: Int) {
+        viewModel.updateMealAmount(amountID,value)
+    }
+
+    private fun subscribeObservers() {
+        viewModel.mealsLiveData.observe(viewLifecycleOwner, Observer { meals ->
+            mealListAdapter.updateMealPlan(meals)
+        })
+    }
 }
 
 

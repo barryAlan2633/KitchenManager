@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/activity_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.mealPlanner.RecipePickerFragment">
+    tools:context=".view.mealPlanner.MealPickerFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recipePicker"
@@ -42,7 +42,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/background_white"
         android:text="save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_cancelMealSelection"
@@ -52,7 +51,6 @@
         android:id="@+id/btn_cancelMealSelection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_white"
         android:text="cancel"
         app:layout_constraintBottom_toBottomOf="@+id/btn_saveMeals"
         app:layout_constraintEnd_toEndOf="parent"

@@ -8,7 +8,7 @@
 
 
     <ImageView
-        android:id="@+id/img_recipe"
+        android:id="@+id/img_meal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -27,9 +27,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginStart="8dp"
         android:text="Name:"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/text_title"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,9 +41,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginStart="8dp"
         android:text="Recipe type:"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/text_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_recipeName" />
 
@@ -68,13 +70,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:autofillHints="Recipe name"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/text_subtitle"
         android:hint="Recipe name"
         android:inputType="text"
-        android:text=""
         android:textAlignment="center"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/img_recipe"
+        android:textColor="@color/text_subtitle"
+        app:layout_constraintEnd_toStartOf="@+id/img_meal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -85,10 +86,10 @@
         android:layout_margin="8dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:itemCount="3"
         tools:layout_editor_absoluteX="8dp"
         tools:listitem="@layout/item_ingredient"
-        tools:orientation="horizontal"
-        tools:itemCount="3"/>
+        tools:orientation="horizontal" />
 
     <LinearLayout
         android:id="@+id/ly"
@@ -99,20 +100,47 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/background_white"
         android:orientation="vertical"
-        android:paddingStart="8dp"
-        android:paddingTop="20dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="8dp"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView3">
+        app:layout_constraintTop_toBottomOf="@+id/sp_newRecipeType">
+
+
+        <TextView
+            style="@style/Title3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="New Ingredient"
+            android:textAlignment="center"
+            android:textColor="@color/text_title"
+            />
+
+        <TextView
+            style="@style/Title4"
+            android:textColor="@color/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select from your ingredient list:" />
+
+        <Spinner
+            android:id="@+id/sp_selectIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="8dp"
+            android:textColor="@color/text"
+            tools:listitem="@android:layout/simple_spinner_item" />
 
 
         <TextView
             style="@style/Title4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create a new item:" />
+            android:text="Or create a new item:"
+            android:textColor="@color/text"
+            />
+
 
         <ImageView
             android:id="@+id/img_newIngredient"
@@ -163,43 +191,15 @@
 
         </LinearLayout>
 
-        <TextView
-            style="@style/Title4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="or select from your ingredient list:" />
-
-        <Spinner
-            android:id="@+id/sp_selectIngredient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="8dp"
-            tools:listitem="@android:layout/simple_spinner_item" />
-
         <Button
             android:id="@+id/btn_addIngredient"
             style="@style/Text4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:background="@drawable/background_gray"
             android:padding="8dp"
             android:text="Add Ingredient" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView3"
-        style="@style/Title3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/background_white"
-        android:padding="8dp"
-        android:text="New Ingredient"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sp_newRecipeType" />
 
 
     <TextView
@@ -208,8 +208,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="@color/white"
-        android:text="Ingredients"
+        android:layout_marginStart="8dp"
+        android:text="Ingredients:"
+        android:textColor="@color/text_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ly" />
 
@@ -218,7 +219,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/background_white"
         android:text="save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
@@ -228,7 +228,6 @@
         android:id="@+id/btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_white"
         android:text="cancel"
         app:layout_constraintBottom_toBottomOf="@+id/btn_updateSaveRecipe"
         app:layout_constraintEnd_toEndOf="parent"

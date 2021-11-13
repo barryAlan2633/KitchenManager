@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class RecipePickerViewModel(application: Application) : BaseViewModel(application) {
+class MealPickerViewModel(application: Application) : BaseViewModel(application) {
 
 
     val allRecipesLiveData = MutableLiveData<List<Recipe>>()

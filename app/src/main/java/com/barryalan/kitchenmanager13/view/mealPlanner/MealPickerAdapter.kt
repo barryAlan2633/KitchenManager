@@ -4,10 +4,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.core.content.ContextCompat
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.barryalan.kitchenmanager13.R
 import com.barryalan.kitchenmanager13.model.Recipe
@@ -16,8 +13,8 @@ import kotlinx.android.synthetic.main.item_recipe.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
-    RecyclerView.Adapter<RecipePickerAdapter.RecipeViewHolder>() {
+class MealPickerAdapter(private val recipeList: ArrayList<Recipe>) :
+    RecyclerView.Adapter<MealPickerAdapter.RecipeViewHolder>() {
 
     private val TAG: String = "AppDebug"
 
@@ -26,7 +23,6 @@ class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
     private var oldSelectedRecipesIDs: MutableList<Long> = mutableListOf()
 
     fun getRecipeList(): ArrayList<Recipe> = recipeList
-
 
     fun getSelectedRecipesIDs(): List<Long> = selectedRecipesIDs
 
@@ -61,7 +57,7 @@ class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
         holder.view.tv_recipeName.text = recipeList[position].name.capitalize(Locale.ROOT)
 
         recipeList[position].image?.let {
-            holder.view.img_recipe.loadImage(
+            holder.view.img_meal.loadImage(
                 Uri.parse(it),
                 getProgressDrawable(holder.view.context)
             )
@@ -70,15 +66,14 @@ class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
         //if this recipe is already selected
         if (selectedRecipesIDs.contains(recipeList[position].ID)) {
             holder.view.background =
-                ContextCompat.getDrawable(holder.view.context, R.color.gray)
+                ContextCompat.getDrawable(holder.view.context, R.color.darkGray)
         }
-
 
         holder.view.setOnClickListener {
             //if this recipe is already selected
             if (selectedRecipesIDs.contains(recipeList[position].ID)) {
                 holder.view.background =
-                    ContextCompat.getDrawable(holder.view.context, R.color.black)
+                    ContextCompat.getDrawable(holder.view.context, R.color.activity_background)
                 selectedRecipesIDs.remove(recipeList[position].ID)
             } else {
                 holder.view.background =
@@ -92,7 +87,6 @@ class RecipePickerAdapter(private val recipeList: ArrayList<Recipe>) :
         super.onAttachedToRecyclerView(recyclerView)
         thisRecyclerView = recyclerView
     }
-
 
     class RecipeViewHolder(var view: View) : RecyclerView.ViewHolder(view)
 }

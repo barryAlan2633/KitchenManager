@@ -10,7 +10,7 @@
 
 
     <ImageView
-        android:id="@+id/img_recipe"
+        android:id="@+id/img_meal"
         android:layout_width="match_parent"
         android:layout_height="125dp"
         android:src="@drawable/ic_error_outline_white_24dp"
@@ -28,7 +28,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_recipe"
+        app:layout_constraintTop_toBottomOf="@+id/img_meal"
         tools:text="Spaghetti" />
 
 

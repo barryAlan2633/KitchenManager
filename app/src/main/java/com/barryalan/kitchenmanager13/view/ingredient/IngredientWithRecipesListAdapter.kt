@@ -69,10 +69,7 @@ class IngredientWithRecipesListAdapter(private val ingredientList: ArrayList<Ing
                 getProgressDrawable(holder.view.context)
             )
         }?: run{
-            holder.view.img_ingredientWR.loadCircleImage(
-                R.drawable.ic_error_outline_white_24dp,
-                getProgressDrawable(holder.view.context)
-            )
+            holder.view.img_ingredientWR.setImageResource(R.drawable.ic_error_outline_white_24dp)
         }
 
         holder.view.setOnClickListener {

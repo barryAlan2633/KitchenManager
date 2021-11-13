@@ -1,7 +1,6 @@
 package com.barryalan.kitchenmanager13.view.mealPlanner
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +15,13 @@ import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
-import com.barryalan.kitchenmanager13.viewmodel.mealPlanner.RecipePickerViewModel
-import kotlinx.android.synthetic.main.fragment_recipe_picker.*
+import com.barryalan.kitchenmanager13.viewmodel.mealPlanner.MealPickerViewModel
+import kotlinx.android.synthetic.main.fragment_meal_picker.*
 
-class RecipePickerFragment : BaseFragment() {
+class MealPickerFragment : BaseFragment() {
 
-    private lateinit var viewModel: RecipePickerViewModel
-    private val recipePickerAdapter = RecipePickerAdapter(arrayListOf())
+    private lateinit var viewModel: MealPickerViewModel
+    private val recipePickerAdapter = MealPickerAdapter(arrayListOf())
     private var mSelectedDate: String = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,14 +37,14 @@ class RecipePickerFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_picker, container, false)
+        return inflater.inflate(R.layout.fragment_meal_picker, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(RecipePickerViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MealPickerViewModel::class.java)
         arguments?.let {
-            mSelectedDate = RecipePickerFragmentArgs.fromBundle(it).selectedDate
+            mSelectedDate = MealPickerFragmentArgs.fromBundle(it).selectedDate
             viewModel.refresh(mSelectedDate)
 
         }
@@ -67,7 +66,7 @@ class RecipePickerFragment : BaseFragment() {
                 )
 
                 //Navigate back
-                val action = RecipePickerFragmentDirections.actionRecipePickerFragmentToCalendar()
+                val action = MealPickerFragmentDirections.actionRecipePickerFragmentToCalendar()
                 action.selectedDate = mSelectedDate
                 Navigation.findNavController(it).navigate(action)
             }
@@ -79,7 +78,7 @@ class RecipePickerFragment : BaseFragment() {
             AreYouSureCallBack {
             override fun proceed() {
                 val action =
-                    RecipePickerFragmentDirections.actionRecipePickerFragmentToCalendar()
+                    MealPickerFragmentDirections.actionRecipePickerFragmentToCalendar()
                 action.selectedDate = mSelectedDate
                 Navigation.findNavController(view).navigate(action)
             }

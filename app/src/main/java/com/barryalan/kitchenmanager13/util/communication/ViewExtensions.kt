@@ -4,7 +4,6 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.customview.customView
 import com.barryalan.kitchenmanager13.R
 
 fun Activity.displayToast(@StringRes message: Int) {

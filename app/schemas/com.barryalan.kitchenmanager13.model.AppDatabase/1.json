@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "175c9a0baacd5524e5c6d6b1ffe783b8",
+    "identityHash": "07f8a5650536d574867b0c546fbfd718",
     "entities": [
       {
         "tableName": "Recipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `image` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `image` TEXT, `type` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "ID",
@@ -25,6 +25,12 @@
             "columnName": "image",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -119,6 +125,67 @@
         "foreignKeys": []
       },
       {
+        "tableName": "MealAmount",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mealAmountID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "ID",
+            "columnName": "mealAmountID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "mealAmountID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MealPlan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mealPlanID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "ID",
+            "columnName": "mealPlanID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "mealPlanID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_MealPlan_date",
+            "unique": true,
+            "columnNames": [
+              "date"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_MealPlan_date` ON `${TABLE_NAME}` (`date`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
         "tableName": "RecipeIngredientRef",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeID` INTEGER NOT NULL, `ingredientID` INTEGER NOT NULL, `amountID` INTEGER NOT NULL, PRIMARY KEY(`recipeID`, `ingredientID`, `amountID`))",
         "fields": [
@@ -151,12 +218,46 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "MealPlanRecipeRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mealPlanID` INTEGER NOT NULL, `recipeID` INTEGER NOT NULL, `mealAmountID` INTEGER NOT NULL, PRIMARY KEY(`mealPlanID`, `recipeID`, `mealAmountID`))",
+        "fields": [
+          {
+            "fieldPath": "mealPlanID",
+            "columnName": "mealPlanID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipeID",
+            "columnName": "recipeID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mealAmountID",
+            "columnName": "mealAmountID",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "mealPlanID",
+            "recipeID",
+            "mealAmountID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '175c9a0baacd5524e5c6d6b1ffe783b8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '07f8a5650536d574867b0c546fbfd718')"
     ]
   }
 }

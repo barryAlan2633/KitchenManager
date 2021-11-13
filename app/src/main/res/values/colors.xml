@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     //app assigned colors
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
 
     //widget assigned colors
-    <color name="activity_background">#000000</color>
-    <color name="search_background">#000000</color>
-
+    <color name="activity_background">#1C2323</color>
+    <color name="search_background">#1C2323</color>
+    <color name="text_title">#FFFFFF</color>
+    <color name="text_subtitle">#FFFFFF</color>
+    <color name="text">#FFFFFF</color>
 
     //raw colors
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="blue">#34b1eb</color>
-    <color name="gray">#e9eef7</color>
-    <color name="darkGray">#ccd4e0</color>
+    <color name="gray">#B1BABD</color>
+    <color name="darkGray">#80878A</color>
     <color name="pink">#f1e9f7</color>
 
 </resources>

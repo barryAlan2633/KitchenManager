@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.barryalan.kitchenmanager13.model.AppDatabase
-import com.barryalan.kitchenmanager13.model.MealPlan
 import com.barryalan.kitchenmanager13.model.MealPlanWithRecipes
 import com.barryalan.kitchenmanager13.model.Recipe
 import com.barryalan.kitchenmanager13.viewmodel.shared.BaseViewModel
@@ -14,9 +13,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class MealPlannerCalendarViewModel(application: Application) : BaseViewModel(application) {
+class MealPlannerViewModel(application: Application) : BaseViewModel(application) {
 
-    val mealsLiveData = MutableLiveData<List<Recipe>>()
+    val mealsLiveData = MutableLiveData<MealPlanWithRecipes>()
     val recipeLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
 
@@ -27,25 +26,25 @@ class MealPlannerCalendarViewModel(application: Application) : BaseViewModel(app
     private fun retrieveMealsFromDB(date: String) {
         loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            val mealPlanWR: MealPlanWithRecipes? =
-                AppDatabase(getApplication()).recipeIngredientsRefDao().getMealPlanWithRecipes(date)
+            val mealPlanWR: MealPlanWithRecipes? = AppDatabase(getApplication()).recipeIngredientsRefDao().getMealPlanWithRecipes(date)
 
             withContext(Dispatchers.Main) {
                 if (mealPlanWR != null) {
-                    mealPlanRetrieved(mealPlanWR.recipes)
+                    mealPlanRetrieved(mealPlanWR)
                     Log.d("debug",mealPlanWR.toString() + " not null")
 
                 } else {
-                    mealPlanRetrieved(listOf())
+                    mealPlanRetrieved(null)
                     Log.d("debug",mealPlanWR.toString() + " null")
+                    //todo display toast saying "there are no meals planned for this day"
 
                 }
             }
         }
     }
 
-    private fun mealPlanRetrieved(recipeList: List<Recipe>?) {
-        mealsLiveData.value = recipeList
+    private fun mealPlanRetrieved(mealList: MealPlanWithRecipes?) {
+        mealsLiveData.value = mealList
         recipeLoadError.value = false
         loading.value = false
     }
@@ -53,6 +52,12 @@ class MealPlannerCalendarViewModel(application: Application) : BaseViewModel(app
     fun deleteMeal(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
             AppDatabase(getApplication()).recipeIngredientsRefDao().deleteRecipe(recipe)
+        }
+    }
+
+    fun updateMealAmount(amountID: Long, value: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            AppDatabase(getApplication()).recipeIngredientsRefDao().updateMealAmount(value,amountID)
         }
     }
 

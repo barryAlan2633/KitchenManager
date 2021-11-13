@@ -27,7 +27,6 @@ import com.barryalan.kitchenmanager13.util.communication.AreYouSureCallBack
 import com.barryalan.kitchenmanager13.util.communication.UIMessage
 import com.barryalan.kitchenmanager13.util.communication.UIMessageType
 import com.barryalan.kitchenmanager13.util.getProgressDrawable
-import com.barryalan.kitchenmanager13.util.loadCircleImage
 import com.barryalan.kitchenmanager13.util.loadImage
 import com.barryalan.kitchenmanager13.view.ingredient.IngredientListAdapter
 import com.barryalan.kitchenmanager13.view.shared.BaseFragment
@@ -161,7 +160,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
 
         }
 
-        img_recipe.setOnClickListener {
+        img_meal.setOnClickListener {
             val intent = Intent(activity, CameraActivity::class.java)
 
             startActivityForResult(intent, 1)
@@ -237,7 +236,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
     private fun initSelectIngredientSpinner() {
         adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_small,
             mutableListOf("No items")
         ).also { adapter ->
 
@@ -320,7 +319,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     data?.let { intent ->
                         mRecipeImageURIString = intent.extras?.get("photoURI").toString()
 
-                        img_recipe.loadImage(
+                        img_meal.loadImage(
                             intent.extras?.get("photoURI") as Uri?,
                             getProgressDrawable(requireContext())
                         )
@@ -401,10 +400,13 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     //-1 is the offset for the "nothing selected" option
                     et_newIngredientName.setText(mIngredientList[position - 1].name)
                     mIngredientImageURIString = mIngredientList[position - 1].image
-                    img_newIngredient.loadImage(
-                        Uri.parse(mIngredientImageURIString),
-                        getProgressDrawable(requireContext())
-                    )
+
+                    mIngredientImageURIString?.let {
+                        img_newIngredient.loadImage(
+                            Uri.parse(mIngredientImageURIString),
+                            getProgressDrawable(requireContext())
+                        )
+                    }
                 }
             }
 
@@ -431,7 +433,7 @@ open class RecipeNewEditFragment : BaseFragment(), AdapterView.OnItemSelectedLis
                     }
 
                     recipeWithIngredients.recipe.image?.let {
-                        img_recipe.loadImage(
+                        img_meal.loadImage(
                             Uri.parse(it),
                             getProgressDrawable(requireContext())
                         )

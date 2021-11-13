@@ -126,6 +126,11 @@
             app:destination="@id/calendar"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeScreenFragment_to_groceriesCalendar"
+            app:destination="@id/groceriesCalendar"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"/>
     </fragment>
     <fragment
         android:id="@+id/ingredientDetailFragment"
@@ -151,9 +156,9 @@
     </fragment>
     <fragment
         android:id="@+id/calendar"
-        android:name="com.barryalan.kitchenmanager13.view.mealPlanner.CalendarFragment"
+        android:name="com.barryalan.kitchenmanager13.view.mealPlanner.MealPlannerFragment"
         android:label="fragment_calendar"
-        tools:layout="@layout/fragment_calendar" >
+        tools:layout="@layout/fragment_meal_planner" >
         <action
             android:id="@+id/action_calendar_to_homeScreenFragment"
             app:destination="@id/homeScreenFragment"
@@ -171,9 +176,9 @@
     </fragment>
     <fragment
         android:id="@+id/recipePickerFragment"
-        android:name="com.barryalan.kitchenmanager13.view.mealPlanner.RecipePickerFragment"
+        android:name="com.barryalan.kitchenmanager13.view.mealPlanner.MealPickerFragment"
         android:label="fragment_recipe_picker"
-        tools:layout="@layout/fragment_recipe_picker" >
+        tools:layout="@layout/fragment_meal_picker" >
         <action
             android:id="@+id/action_recipePickerFragment_to_calendar"
             app:destination="@id/calendar"
@@ -183,5 +188,16 @@
             android:name="selectedDate"
             app:argType="string"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/groceriesCalendar"
+        android:name="com.barryalan.kitchenmanager13.view.groceries.GroceryListFragment"
+        android:label="fragment_groceries_calendar"
+        tools:layout="@layout/fragment_grocery_list" >
+        <action
+            android:id="@+id/action_groceriesCalendar_to_homeScreenFragment"
+            app:destination="@id/homeScreenFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
 </navigation>

@@ -58,10 +58,9 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         holder.view.tv_recipeName.text = filteredRecipeList[position].name.capitalize(Locale.ROOT)
 
-
         //If this is the AddNewRecipe card
         if (filteredRecipeList[position].ID == 0L) {
-            holder.view.img_recipe.setImageDrawable(
+            holder.view.img_meal.setImageDrawable(
                 holder.view.context.resources.getDrawable(
                     R.drawable.ic_add_circle_outline_white_24dp,
                     null
@@ -69,15 +68,12 @@ class RecipeListAdapter(private val recipeList: ArrayList<Recipe>) :
             )
         }else{
             filteredRecipeList[position].image?.let {
-                holder.view.img_recipe.loadImage(
+                holder.view.img_meal.loadImage(
                     Uri.parse(it),
                     getProgressDrawable(holder.view.context)
                 )
             }?: run{
-                holder.view.img_recipe.loadCircleImage(
-                    R.drawable.ic_error_outline_white_24dp,
-                    getProgressDrawable(holder.view.context)
-                )
+                holder.view.img_meal.setImageResource(R.drawable.ic_error_outline_white_24dp)
             }
         }
 

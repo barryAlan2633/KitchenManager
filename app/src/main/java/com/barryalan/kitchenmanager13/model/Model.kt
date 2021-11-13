@@ -94,11 +94,22 @@ data class MealPlan(
     var ID: Long = 0
 }
 
+@Entity
+data class MealAmount(
+    val amount: Int
+//todo maybe change this to int instead of float
+) {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "mealAmountID")
+    var ID: Long = 0
+}
 
-@Entity(primaryKeys = ["mealPlanID", "recipeID"])
+
+@Entity(primaryKeys = ["mealPlanID", "recipeID","mealAmountID"])
 data class MealPlanRecipeRef(
     val mealPlanID: Long,
-    val recipeID: Long
+    val recipeID: Long,
+    val mealAmountID: Long
 )
 
 data class MealPlanWithRecipes(
@@ -114,7 +125,19 @@ data class MealPlanWithRecipes(
             entityColumn = "recipeID"
         )
     )
-    val recipes: List<Recipe>
+    val recipes: List<Recipe>,
+
+    @Relation(
+        parentColumn = "mealPlanID",
+        entity = MealAmount::class,
+        entityColumn = "mealAmountID",
+        associateBy = Junction(
+            value = MealPlanRecipeRef::class,
+            parentColumn = "mealPlanID",
+            entityColumn = "mealAmountID"
+        )
+    )
+    val amounts:List<MealAmount>
 
 )
 
